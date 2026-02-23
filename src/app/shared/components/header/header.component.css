@@ -1,0 +1,29 @@
+.app-header {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 10;
+}
+
+.btn-sair {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+}
+
+.btn-sair img {
+  width: 70px;
+  height: auto;
+  display: block;
+}
+
+.btn-sair:hover {
+  opacity: 0.9;
+}
+
+

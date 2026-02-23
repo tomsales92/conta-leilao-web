@@ -1,0 +1,16 @@
+<div class="timeline" role="progressbar" [attr.aria-valuenow]="currentStep()" [attr.aria-valuemin]="1" [attr.aria-valuemax]="totalSteps()">
+  @for (i of steps(); track i) {
+    <span
+      class="dot"
+      [class.active]="i === currentStep()"
+      [class.completed]="i < currentStep()"
+    >
+      @if (i === currentStep()) {
+        {{ i }}
+      }
+    </span>
+    @if (i < totalSteps()) {
+      <span class="line"></span>
+    }
+  }
+</div>

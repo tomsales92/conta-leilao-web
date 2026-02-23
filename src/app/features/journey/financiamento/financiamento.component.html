@@ -1,0 +1,82 @@
+<div class="page">
+  <app-header></app-header>
+
+  <div class="content">
+    <h1 class="title">Financiamento</h1>
+    <app-progress-timeline [currentStep]="currentStep" [totalSteps]="totalSteps"></app-progress-timeline>
+
+    <form class="form">
+      <div class="field">
+        <label class="label" for="auctionValue">Por qual valor você deseja ARREMATAR?</label>
+        <input
+          id="auctionValue"
+          type="text"
+          inputmode="decimal"
+          class="input"
+          [ngModel]="auctionValue()"
+          (ngModelChange)="auctionValue.set($event)"
+          name="auctionValue"
+          placeholder="0,00"
+        />
+      </div>
+
+      <div class="field">
+        <span class="label">Modalidade do financiamento</span>
+        <div class="modality-btns">
+          <button type="button" class="modality-btn" [class.selected]="modality() === 'SAC'" (click)="setModality('SAC')">SAC</button>
+          <button type="button" class="modality-btn" [class.selected]="modality() === 'PRICE'" (click)="setModality('PRICE')">PRICE</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label" for="downPayment">Porcentagem da entrada %</label>
+        <input
+          id="downPayment"
+          type="text"
+          inputmode="decimal"
+          class="input"
+          [ngModel]="downPaymentPercentage()"
+          (ngModelChange)="downPaymentPercentage.set($event)"
+          name="downPayment"
+          placeholder="0"
+        />
+      </div>
+
+      <div class="field">
+        <label class="label" for="interestRate">Taxa de Juros ao Ano %</label>
+        <input
+          id="interestRate"
+          type="text"
+          inputmode="decimal"
+          class="input"
+          [ngModel]="annualInterestRate()"
+          (ngModelChange)="annualInterestRate.set($event)"
+          name="interestRate"
+          placeholder="0"
+        />
+      </div>
+
+      <div class="field">
+        <label class="label" for="months">Quantidade de meses</label>
+        <input
+          id="months"
+          type="text"
+          inputmode="numeric"
+          class="input"
+          [ngModel]="financingMonths()"
+          (ngModelChange)="financingMonths.set($event)"
+          name="months"
+          placeholder="0"
+        />
+      </div>
+    </form>
+  </div>
+
+  <footer class="page-footer">
+    <app-journey-nav-buttons
+      voltarLink="/forma-pagamento"
+      [proximoDisabled]="!canNext()"
+      (proximo)="next()"
+    ></app-journey-nav-buttons>
+  </footer>
+</div>

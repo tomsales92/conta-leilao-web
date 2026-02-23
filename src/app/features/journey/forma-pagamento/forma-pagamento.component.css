@@ -1,0 +1,118 @@
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #83e3ea 0%, #00a8b2 100%);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 1.5rem 0;
+}
+
+.content {
+  width: 100%;
+  max-width: 348px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  padding-top: 2.5rem;
+  flex: 1;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 400;
+  margin: 30px 0 2rem;
+  text-align: center;
+}
+
+.app-progress-timeline {
+  margin-bottom: 2.5rem;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 348px;
+  margin-top: 80px;
+  margin-bottom: 0;
+}
+
+.page-footer {
+  margin-top: auto;
+  width: 100%;
+  padding: 1.5rem 0 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 348px;
+  padding: 1rem 1.25rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.card:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.card.selected {
+  background: #fff;
+  border-color: #fff;
+  color: #00a8b2;
+}
+
+.card.selected .card-subtitle {
+  color: #00a8b2;
+  opacity: 0.9;
+}
+
+/* Ícone SVG (branco) passa a verde no card selecionado */
+.card.selected .card-icon {
+  filter: brightness(0) saturate(100%) invert(58%) sepia(93%) saturate(500%) hue-rotate(130deg);
+}
+
+.card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.card-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.card-icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  object-fit: contain;
+}

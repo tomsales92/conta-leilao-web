@@ -1,0 +1,66 @@
+.home {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.header {
+  padding: 1.5rem 2rem;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #18c6c8;
+}
+
+.header p {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user span {
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.user button {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  color: #666;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.user button:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.main p {
+  margin: 0;
+  color: #555;
+  line-height: 1.6;
+}

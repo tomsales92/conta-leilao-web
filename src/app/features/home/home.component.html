@@ -1,0 +1,15 @@
+<div class="home">
+  <header class="header">
+    <h1>Conta Leilão</h1>
+    <p>Versão Web — mesmo backend do app</p>
+    <div class="user">
+      @if (auth.currentUser(); as user) {
+        <span>{{ user.email }}</span>
+        <button type="button" (click)="auth.signOut()">Sair</button>
+      }
+    </div>
+  </header>
+  <main class="main">
+    <p>Você está logado. Aqui você pode evoluir a versão web (cálculos, resumos, documentos) reutilizando o Supabase do app Flutter.</p>
+  </main>
+</div>

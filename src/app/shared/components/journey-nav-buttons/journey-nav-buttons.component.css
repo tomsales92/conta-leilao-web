@@ -1,0 +1,63 @@
+.nav-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0;
+}
+
+@media (max-width: 768px) {
+  .nav-buttons {
+    flex-direction: column;
+    width: 80vw;
+    max-width: 80vw;
+  }
+
+  .nav-buttons .btn {
+    width: 100%;
+  }
+
+  /* Próximo em cima em telas pequenas (mais intuitivo para continuar) */
+  .nav-buttons .btn-proximo {
+    order: -1;
+  }
+
+  .nav-buttons .btn-voltar {
+    order: 0;
+  }
+}
+
+.btn {
+  width: 240px;
+  height: 48px;
+  flex-shrink: 0;
+  padding: 0 1.5rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  background: transparent;
+  border: 1.5px solid #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: background 0.2s;
+  box-sizing: border-box;
+}
+
+.btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-proximo:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

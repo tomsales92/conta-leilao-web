@@ -1,6 +1,29 @@
-# ContaLeilaoWeb
+# Conta Leilão — Web
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.4.
+Projeto Angular que reutiliza o **mesmo backend Supabase** do app Flutter (teste-cursor): Auth, tabela `profiles` e demais recursos.
+
+## Configurar Supabase
+
+Use as mesmas credenciais do app Flutter:
+
+1. No projeto **teste-cursor**, copie os valores de `SUPABASE_URL` e `SUPABASE_ANON_KEY` do arquivo `.env`.
+2. No projeto **conta-leilao-web**, edite `src/environments/environment.ts` e preencha:
+
+```ts
+export const environment = {
+  production: false,
+  supabaseUrl: 'https://seu-projeto.supabase.co',
+  supabaseAnonKey: 'sua-anon-public-key-aqui',
+};
+```
+
+Para produção, preencha também `src/environments/environment.prod.ts` ou use variáveis de ambiente no seu pipeline de build.
+
+### Login com Google (OAuth)
+
+1. No **Supabase Dashboard**: Authentication > Providers > Google — ative e preencha Client ID e Client Secret (Google Cloud Console).
+2. Em **Authentication > URL Configuration > Redirect URLs**, adicione a URL de retorno (ex.: `http://localhost:4200/` para dev e a URL da sua aplicação em produção).
+3. O botão "Continuar com o Google" na tela de login redireciona para o Google e, após o login, o usuário volta para a aplicação já autenticado.
 
 ## Development server
 

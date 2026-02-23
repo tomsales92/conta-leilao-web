@@ -1,0 +1,122 @@
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #83e3ea 0%, #00a8b2 100%);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 1.5rem 0;
+}
+
+.content {
+  width: 100%;
+  max-width: 348px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 0 auto;
+  flex: 1;
+  padding-top: 2.5rem;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 400;
+  margin: 30px 0 2rem;
+  text-align: center;
+}
+
+.app-progress-timeline {
+  margin-bottom: 2.5rem;
+}
+
+.form {
+  width: 100%;
+  text-align: left;
+  margin-top: 50px;
+}
+
+.field {
+  display: block;
+  margin-bottom: 1.25rem;
+  min-width: 0;
+}
+
+.label {
+  display: block;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+.input {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0.5rem 0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.9);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.input:focus {
+  border-bottom-color: #fff;
+}
+
+.modality-btns {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start;
+  margin-top: 0.5rem;
+}
+
+.modality-btn {
+  flex: 0 0 auto;
+  min-width: 120px;
+  padding: 0.75rem 1rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.modality-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.modality-btn.selected {
+  background: #fff;
+  border-color: #fff;
+  color: #00a8b2;
+}
+
+.page-footer {
+  margin-top: auto;
+  width: 100%;
+  padding: 1.5rem 0 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

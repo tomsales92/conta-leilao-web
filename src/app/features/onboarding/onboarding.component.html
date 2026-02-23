@@ -1,0 +1,27 @@
+<div class="onboarding-page">
+  <app-header></app-header>
+
+  <div class="onboarding-content">
+    <img class="logo" src="/assets/images/logo-contaleilao.svg" alt="Conta Leilão" />
+    <h1 class="welcome">
+      Olá <span class="welcome-name">{{ firstName || 'usuário' }}</span>, <span class="welcome-word">{{ welcomeWord }}</span>
+    </h1>
+    <p class="tagline">ao site que te ajuda calcular a viabilidade do Leilão.</p>
+
+    <div class="mascote-wrapper">
+      <img class="mascote" src="/assets/images/mascote.svg" alt="" width="280" height="280" aria-hidden="true" />
+    </div>
+
+    <div class="actions">
+      <a routerLink="/forma-pagamento" class="btn-action">
+        <img src="/assets/images/calculator.svg" alt="" width="24" height="24" aria-hidden="true" />
+        <span>Calculadora</span>
+      </a>
+      <a routerLink="/forma-pagamento" class="btn-action btn-premium">
+        <img src="/assets/images/search.svg" alt="" width="24" height="24" aria-hidden="true" />
+        <span>Analisar Matricula</span>
+        <img class="crown" src="/assets/images/coroa-premium.svg" alt="" width="42" height="42" aria-hidden="true" />
+      </a>
+    </div>
+  </div>
+</div>

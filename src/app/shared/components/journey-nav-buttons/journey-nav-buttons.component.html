@@ -1,0 +1,13 @@
+<div class="nav-buttons">
+  @if (voltarLink()) {
+    <a [routerLink]="voltarLink()!" class="btn btn-voltar">Voltar</a>
+  }
+  <button
+    type="proximoType()"
+    class="btn btn-proximo"
+    [disabled]="proximoDisabled()"
+    (click)="proximoType() === 'button' && onProximo()"
+  >
+    {{ proximoLabel() }}
+  </button>
+</div>

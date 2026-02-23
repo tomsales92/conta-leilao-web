@@ -1,0 +1,96 @@
+<div class="signup-page">
+  <!-- Mascote: apenas em telas grandes (monitores, notebooks) -->
+  <div class="mascote" aria-hidden="true">
+    <img src="/assets/images/mascote.svg" alt="" width="320" height="320" />
+  </div>
+
+  <div class="signup-content">
+    <img class="logo" src="/assets/images/logo-contaleilao.svg" alt="Conta Leilão" width="80" height="80" />
+
+    @if (error) {
+      <div class="error" role="alert">{{ error }}</div>
+    }
+    @if (success) {
+      <div class="success" role="status">
+        Conta criada. Verifique seu e-mail para confirmar ou <a routerLink="/login">faça login</a>.
+      </div>
+    }
+
+    @if (!success) {
+      <form class="signup-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <label class="field">
+          <span class="label">Nome</span>
+          <input type="text" formControlName="firstName" autocomplete="given-name" placeholder="Seu nome" />
+        </label>
+        @if (form.controls.firstName.touched && form.controls.firstName.errors) {
+          <span class="field-error">Nome obrigatório</span>
+        }
+
+        <label class="field">
+          <span class="label">Sobrenome</span>
+          <input type="text" formControlName="lastName" autocomplete="family-name" placeholder="Seu sobrenome" />
+        </label>
+        @if (form.controls.lastName.touched && form.controls.lastName.errors) {
+          <span class="field-error">Sobrenome obrigatório</span>
+        }
+
+        <label class="field">
+          <span class="label">Data de nascimento</span>
+          <input type="date" formControlName="dateOfBirth" />
+        </label>
+        @if (form.controls.dateOfBirth.touched && form.controls.dateOfBirth.errors) {
+          <span class="field-error">Data obrigatória</span>
+        }
+
+        <div class="field">
+          <span class="label">Masculino ou Feminino</span>
+          <div class="gender-options">
+            <label class="gender-option">
+              <input type="radio" formControlName="gender" value="M" />
+              <span>Masculino</span>
+            </label>
+            <label class="gender-option">
+              <input type="radio" formControlName="gender" value="F" />
+              <span>Feminino</span>
+            </label>
+          </div>
+        </div>
+        @if (form.controls.gender.touched && form.controls.gender.errors) {
+          <span class="field-error">Selecione o gênero</span>
+        }
+
+        <label class="field">
+          <span class="label">E-mail</span>
+          <input type="email" formControlName="email" autocomplete="email" placeholder="seu@email.com" />
+        </label>
+        @if (form.controls.email.touched && form.controls.email.errors) {
+          <span class="field-error">
+            {{ form.controls.email.errors?.['required'] ? 'E-mail obrigatório' : 'E-mail inválido' }}
+          </span>
+        }
+
+        <label class="field">
+          <span class="label">Senha (mín. 6 caracteres)</span>
+          <input type="password" formControlName="password" autocomplete="new-password" placeholder="********" />
+        </label>
+        @if (form.controls.password.touched && form.controls.password.errors) {
+          <span class="field-error">
+            {{ form.controls.password.errors?.['required'] ? 'Senha obrigatória' : 'Mínimo 6 caracteres' }}
+          </span>
+        }
+
+        <button type="submit" class="btn-submit" [disabled]="loading">
+          @if (loading) {
+            <span class="spinner" aria-hidden="true"></span>
+          } @else {
+            Criar conta
+          }
+        </button>
+      </form>
+    }
+
+    <p class="login-link">
+      Já tem conta? <a routerLink="/login">Entrar</a>
+    </p>
+  </div>
+</div>

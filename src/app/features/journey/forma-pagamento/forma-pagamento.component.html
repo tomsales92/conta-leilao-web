@@ -1,0 +1,33 @@
+<div class="page">
+  <app-header></app-header>
+
+  <div class="content">
+    <h1 class="title">Forma de pagamento</h1>
+    <app-progress-timeline [currentStep]="currentStep" [totalSteps]="totalSteps"></app-progress-timeline>
+
+    <div class="cards">
+      <button type="button" class="card" [class.selected]="selected() === 'cash'" (click)="select('cash')">
+        <div class="card-text">
+          <span class="card-title">À Vista</span>
+          <span class="card-subtitle">Recursos próprios</span>
+        </div>
+        <img class="card-icon" src="/assets/images/dinheiro.svg" alt="" width="34" height="34" aria-hidden="true" />
+      </button>
+      <button type="button" class="card" [class.selected]="selected() === 'financed'" (click)="select('financed')">
+        <div class="card-text">
+          <span class="card-title">Financiado</span>
+          <span class="card-subtitle">Crédito disponível do Banco</span>
+        </div>
+        <img class="card-icon" src="/assets/images/bancoforma.svg" alt="" width="34" height="34" aria-hidden="true" />
+      </button>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <app-journey-nav-buttons
+      voltarLink="/onboarding"
+      [proximoDisabled]="!selected()"
+      (proximo)="next()"
+    ></app-journey-nav-buttons>
+  </footer>
+</div>
