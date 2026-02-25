@@ -1,0 +1,69 @@
+<div class="page">
+  <app-header></app-header>
+
+  <div class="content">
+    <h1 class="title">Venda</h1>
+    <app-progress-timeline [currentStep]="currentStep()" [totalSteps]="totalSteps()"></app-progress-timeline>
+
+    <form class="form">
+      <div class="field">
+        <label class="label" for="saleValue">Valor da Venda</label>
+        <input
+          id="saleValue"
+          type="text"
+          inputmode="numeric"
+          class="input"
+          mask="separator.2"
+          thousandSeparator="."
+          decimalMarker=","
+          [leadZero]="true"
+          [allowNegativeNumbers]="false"
+          [ngModel]="saleValue()"
+          (ngModelChange)="saleValue.set($event)"
+          name="saleValue"
+          placeholder="Digite o valor previsto da venda"
+        />
+      </div>
+
+      <div class="field">
+        <label class="label" for="brokerCommission">Comissão do Corretor %</label>
+        <input
+          id="brokerCommission"
+          type="number"
+          inputmode="decimal"
+          min="0"
+          step="0.01"
+          class="input"
+          [ngModel]="brokerCommissionPercentage()"
+          (ngModelChange)="brokerCommissionPercentage.set(toStr($event))"
+          name="brokerCommission"
+          placeholder="Costuma ser 6% de Comissão"
+        />
+      </div>
+
+      <div class="field">
+        <label class="label" for="incomeTax">Imposto de renda sobre o lucro %</label>
+        <input
+          id="incomeTax"
+          type="number"
+          inputmode="decimal"
+          min="0"
+          step="0.01"
+          class="input"
+          [ngModel]="incomeTaxPercentage()"
+          (ngModelChange)="incomeTaxPercentage.set(toStr($event))"
+          name="incomeTax"
+          placeholder="valor em porcentagem"
+        />
+      </div>
+    </form>
+  </div>
+
+  <footer class="page-footer">
+    <app-journey-nav-buttons
+      voltarLink="/despesas"
+      [proximoDisabled]="!canNext()"
+      (proximo)="next()"
+    ></app-journey-nav-buttons>
+  </footer>
+</div>

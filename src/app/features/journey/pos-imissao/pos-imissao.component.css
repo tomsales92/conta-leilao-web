@@ -60,15 +60,6 @@
   text-align: left;
 }
 
-.hint {
-  display: block;
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 14px;
-  font-weight: 400;
-  margin-bottom: 0.35rem;
-  text-align: left;
-}
-
 .input {
   display: block;
   width: 100%;

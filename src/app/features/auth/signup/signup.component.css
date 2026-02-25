@@ -1,8 +1,7 @@
-/* Cadastro: pode ter scroll; fundo em gradiente fixo para não aparecer faixa branca */
+/* Tela cheia, sem scroll no body: fundo fixo como na tela de login */
 .signup-page {
-  min-height: 100vh;
-  min-height: 100dvh;
-  position: relative;
+  position: fixed;
+  inset: 0;
   overflow: auto;
   display: flex;
   flex-direction: column;

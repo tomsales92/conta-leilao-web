@@ -1,0 +1,70 @@
+.dialog {
+  padding: 1.5rem;
+  text-align: center;
+  min-width: 280px;
+  min-height: 320px;
+  max-width: 90vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.dialog-icon {
+  display: block;
+  margin: 0 auto 1rem;
+  flex-shrink: 0;
+}
+
+.dialog-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #fff;
+  margin: 0 0 0.5rem;
+}
+
+.dialog-message {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #fff;
+  margin: 0 0 1.5rem;
+  line-height: 1.4;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  min-width: 100px;
+  padding: 0.625rem 1.25rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-sim {
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+}
+
+.btn-sim:hover {
+  background: #fff;
+}
+
+.btn-nao {
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid #fff;
+}
+
+.btn-nao:hover {
+  background: rgba(255, 255, 255, 0.15);
+}

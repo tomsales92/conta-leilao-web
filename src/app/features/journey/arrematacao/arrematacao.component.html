@@ -4,6 +4,103 @@
   <div class="content">
     <h1 class="title">Arrematação</h1>
     <app-progress-timeline [currentStep]="currentStep()" [totalSteps]="totalSteps()"></app-progress-timeline>
-    <p class="placeholder">Em construção.</p>
+
+    <form class="form">
+      @if (showAuctionValueField()) {
+        <div class="field">
+          <label class="label" for="auctionValue">Valor da arrematação</label>
+          <input
+            id="auctionValue"
+            type="text"
+            inputmode="numeric"
+            class="input"
+            mask="separator.2"
+            thousandSeparator="."
+            decimalMarker=","
+            [leadZero]="true"
+            [ngModel]="auctionValue()"
+            (ngModelChange)="auctionValue.set($event)"
+            name="auctionValue"
+            placeholder="Valor da arrematação"
+          />
+        </div>
+      }
+
+      <div class="field">
+        <label class="label" for="commission">Comissão do Leiloeiro %</label>
+        <input
+          id="commission"
+          type="number"
+          inputmode="decimal"
+          min="0"
+          step="0.01"
+          class="input"
+          [ngModel]="commissionPercentage()"
+          (ngModelChange)="commissionPercentage.set(toStr($event))"
+          name="commission"
+          placeholder="Valor em porcentagem"
+        />
+      </div>
+
+      <div class="field">
+        <label class="label" for="itbi">Porcentagem do ITBI %</label>
+        <input
+          id="itbi"
+          type="number"
+          inputmode="decimal"
+          min="0"
+          step="0.01"
+          class="input"
+          [ngModel]="itbiPercentage()"
+          (ngModelChange)="itbiPercentage.set(toStr($event))"
+          name="itbi"
+          placeholder="Costuma ser 3%"
+        />
+      </div>
+
+      <div class="field">
+        <label class="label" for="propertyReg">Valor do Registro de Imóvel</label>
+        <input
+          id="propertyReg"
+          type="text"
+          inputmode="numeric"
+          class="input"
+          mask="separator.2"
+          thousandSeparator="."
+          decimalMarker=","
+          [leadZero]="true"
+          [ngModel]="propertyRegistrationValue()"
+          (ngModelChange)="propertyRegistrationValue.set($event)"
+          name="propertyReg"
+          placeholder="Oficializar a compra no cartório"
+        />
+      </div>
+
+      <div class="field">
+        <label class="label" for="vacating">Desocupação</label>
+        <input
+          id="vacating"
+          type="text"
+          inputmode="numeric"
+          class="input"
+          mask="separator.2"
+          thousandSeparator="."
+          decimalMarker=","
+          [leadZero]="true"
+          [ngModel]="vacatingValue()"
+          (ngModelChange)="vacatingValue.set($event)"
+          name="vacating"
+          placeholder="Valor para desocupar"
+        />
+      </div>
+    </form>
   </div>
+
+  <footer class="page-footer">
+    <app-journey-nav-buttons
+      [voltarLink]="voltarLink()"
+      [proximoDisabled]="!canNext()"
+      (proximo)="next()"
+    ></app-journey-nav-buttons>
+  </footer>
 </div>

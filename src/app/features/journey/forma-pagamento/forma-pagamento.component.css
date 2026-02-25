@@ -1,5 +1,8 @@
+/* Tela cheia, sem scroll no body: fundo fixo como na tela de login */
 .page {
-  min-height: 100vh;
+  position: fixed;
+  inset: 0;
+  overflow: auto;
   background: linear-gradient(180deg, #83e3ea 0%, #00a8b2 100%);
   font-family: 'Poppins', sans-serif;
   font-weight: 500;

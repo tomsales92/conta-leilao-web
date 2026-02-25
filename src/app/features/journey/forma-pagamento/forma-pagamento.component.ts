@@ -30,6 +30,11 @@ export class FormaPagamentoComponent {
   }
 
   select(id: PaymentMethodId): void {
+    const current = this.journey.paymentMethod();
+    if (id !== current) {
+      this.journey.clearAllData();
+    }
+    this.journey.setPaymentMethod(id);
     this.selected.set(id);
   }
 

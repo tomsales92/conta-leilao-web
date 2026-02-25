@@ -1,5 +1,8 @@
+/* Tela cheia, sem scroll no body: scroll só dentro da página */
 .home {
-  min-height: 100vh;
+  position: fixed;
+  inset: 0;
+  overflow: auto;
   background: #f5f5f5;
 }
 

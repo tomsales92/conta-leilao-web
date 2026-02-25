@@ -7,16 +7,21 @@
 
     <form class="form">
       <div class="field">
-        <label class="label" for="auctionValue">Por qual valor você deseja ARREMATAR?</label>
+        <label class="label" for="auctionValue">Valor da arrematação</label>
         <input
           id="auctionValue"
           type="text"
-          inputmode="decimal"
+          inputmode="numeric"
           class="input"
+          mask="separator.2"
+          thousandSeparator="."
+          decimalMarker=","
+          [leadZero]="true"
+          [allowNegativeNumbers]="false"
           [ngModel]="auctionValue()"
           (ngModelChange)="auctionValue.set($event)"
           name="auctionValue"
-          placeholder="0,00"
+          placeholder="Valor da arrematação"
         />
       </div>
 
@@ -32,13 +37,15 @@
         <label class="label" for="downPayment">Porcentagem da entrada %</label>
         <input
           id="downPayment"
-          type="text"
+          type="number"
           inputmode="decimal"
+          min="0"
+          step="0.01"
           class="input"
           [ngModel]="downPaymentPercentage()"
-          (ngModelChange)="downPaymentPercentage.set($event)"
+          (ngModelChange)="downPaymentPercentage.set(toStr($event))"
           name="downPayment"
-          placeholder="0"
+          placeholder="Valor em porcentagem da entrada"
         />
       </div>
 
@@ -46,27 +53,30 @@
         <label class="label" for="interestRate">Taxa de Juros ao Ano %</label>
         <input
           id="interestRate"
-          type="text"
+          type="number"
           inputmode="decimal"
+          min="0"
+          step="0.01"
           class="input"
           [ngModel]="annualInterestRate()"
-          (ngModelChange)="annualInterestRate.set($event)"
+          (ngModelChange)="annualInterestRate.set(toStr($event))"
           name="interestRate"
-          placeholder="0"
+          placeholder="Valor em porcentagem"
         />
       </div>
 
       <div class="field">
-        <label class="label" for="months">Quantidade de meses</label>
+        <label class="label" for="months">Quantidade de meses do financiamento</label>
         <input
           id="months"
-          type="text"
+          type="number"
           inputmode="numeric"
+          min="1"
           class="input"
           [ngModel]="financingMonths()"
-          (ngModelChange)="financingMonths.set($event)"
+          (ngModelChange)="financingMonths.set(toStr($event))"
           name="months"
-          placeholder="0"
+          placeholder="Ex: 360 meses"
         />
       </div>
     </form>

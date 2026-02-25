@@ -1,5 +1,8 @@
+/* Tela cheia, sem scroll no body: fundo fixo como na tela de login */
 .page {
-  min-height: 100vh;
+  position: fixed;
+  inset: 0;
+  overflow: auto;
   background: linear-gradient(180deg, #83e3ea 0%, #00a8b2 100%);
   font-family: 'Poppins', sans-serif;
   font-weight: 500;
@@ -36,6 +39,8 @@
 
 .form {
   width: 100%;
+  max-width: 348px;
+  min-width: 0;
   text-align: left;
   margin-top: 50px;
 }
@@ -70,6 +75,8 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.9);
   outline: none;
   box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .input::placeholder {
@@ -78,6 +85,26 @@
 
 .input:focus {
   border-bottom-color: #fff;
+}
+
+/* Remove setinhas dos inputs type="number" */
+.input[type="number"]::-webkit-outer-spin-button,
+.input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Autofill: mantém aparência igual ao login (fundo transparente, texto branco) */
+.form .input:-webkit-autofill,
+.form .input:-webkit-autofill:hover,
+.form .input:-webkit-autofill:focus,
+.form .input:-webkit-autofill:active {
+  -webkit-text-fill-color: #fff;
+  -webkit-box-shadow: 0 0 0 1000px transparent inset;
+  box-shadow: 0 0 0 1000px transparent inset;
 }
 
 .modality-btns {

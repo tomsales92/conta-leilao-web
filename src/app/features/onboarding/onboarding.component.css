@@ -1,6 +1,8 @@
+/* Tela cheia, sem scroll no body: fundo fixo como na tela de login */
 .onboarding-page {
-  min-height: 100vh;
-  min-height: 100dvh;
+  position: fixed;
+  inset: 0;
+  overflow: auto;
   background: linear-gradient(180deg, #83e3ea 0%, #00a8b2 100%);
   display: flex;
   flex-direction: column;
@@ -10,7 +12,6 @@
   font-family: 'Poppins', sans-serif;
   font-weight: 500;
   color: #fff;
-  position: relative;
 }
 
 .onboarding-content {

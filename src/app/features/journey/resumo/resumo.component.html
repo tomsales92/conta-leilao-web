@@ -1,0 +1,97 @@
+<div class="page">
+  <app-header></app-header>
+
+  <div class="content">
+    <h1 class="title">Resumo</h1>
+
+    @if (summary(); as result) {
+      <section class="card">
+        <h2 class="card-title">Resumo do investimento</h2>
+
+        <div class="row">
+          <span class="label">Forma de pagamento</span>
+          <span class="value">{{ paymentMethodLabel() }}</span>
+        </div>
+        <div class="row">
+          <span class="label">
+            Capital investido até a venda
+            <span class="info-icon" title="Soma de todos os custos até o momento da venda">ⓘ</span>
+          </span>
+          <span class="value">{{ formatCurrency(result.totalCosts) }}</span>
+        </div>
+        <div class="row">
+          <span class="label">Valor real de venda</span>
+          <span class="value">{{ formatCurrency(result.realSaleValue) }}</span>
+        </div>
+        <div class="row">
+          <span class="label">
+            ROI total
+            <span class="info-icon" title="Retorno sobre o investimento total">ⓘ</span>
+          </span>
+          <span class="value">{{ formatPct(result.roiTotal) }}</span>
+        </div>
+        <div class="row">
+          <span class="label">ROI mensal</span>
+          <span class="value">{{ formatPct(result.roiMonthly) }}</span>
+        </div>
+        <div class="row">
+          <span class="label">Lucro líquido total</span>
+          <span class="value" [class.positive]="result.netProfit > 0" [class.negative]="result.netProfit < 0">{{ formatCurrency(result.netProfit) }}</span>
+        </div>
+
+        <button type="button" class="link-detail" (click)="showDetails.set(!showDetails())">
+          {{ showDetails() ? 'Ocultar detalhamento do cálculo' : 'Ver detalhamento do cálculo' }}
+        </button>
+
+        @if (showDetails()) {
+          <div class="detail">
+            @if (isFinanced() && 'downPayment' in result) {
+              <h3 class="detail-title">Entrada</h3>
+              <div class="row">
+                <span class="label">Valor da entrada</span>
+                <span class="value">{{ formatCurrency(result.downPayment) }}</span>
+              </div>
+            }
+
+            <h3 class="detail-title">Custos</h3>
+            <div class="row">
+              <span class="label">Custos de aquisição</span>
+              <span class="value">{{ formatCurrency(result.acquisitionCosts) }}</span>
+            </div>
+
+            @if (isFinanced() && 'financingCostPeriod' in result) {
+              <h3 class="detail-title">Financiamento</h3>
+              <div class="row">
+                <span class="label">Custo do financiamento no período</span>
+                <span class="value">{{ formatCurrency(result.financingCostPeriod) }}</span>
+              </div>
+              <h3 class="detail-title">Saldo devedor</h3>
+              <div class="row">
+                <span class="label">Saldo devedor após {{ monthsPossession() }} meses</span>
+                <span class="value">{{ formatCurrency(result.outstandingBalance) }}</span>
+              </div>
+            }
+
+            <h3 class="detail-title">IR</h3>
+            <div class="row">
+              <span class="label">IR sobre ganho</span>
+              <span class="value">{{ formatCurrency(result.incomeTax) }}</span>
+            </div>
+          </div>
+        }
+
+        <div class="disclaimer">
+          <img src="/assets/images/icons/alert.svg" alt="" class="disclaimer-icon" width="24" height="24" aria-hidden="true" />
+          <p class="disclaimer-text">
+            Este cálculo é uma estimativa. O cálculo oficial é feito via GCAP (Receita Federal).
+            As despesas só reduzem imposto se forem comprováveis.
+          </p>
+        </div>
+      </section>
+
+      <button type="button" class="btn-share" (click)="share()">Compartilhar</button>
+    } @else {
+      <p class="no-data">Preencha todas as etapas da jornada para ver o resumo.</p>
+    }
+  </div>
+</div>

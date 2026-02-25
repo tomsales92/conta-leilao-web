@@ -29,6 +29,26 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'pos-imissao',
+    loadComponent: () => import('./features/journey/pos-imissao/pos-imissao.component').then(m => m.PosImissaoComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'despesas',
+    loadComponent: () => import('./features/journey/despesas/despesas.component').then(m => m.DespesasComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'venda',
+    loadComponent: () => import('./features/journey/venda/venda.component').then(m => m.VendaComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'resumo',
+    loadComponent: () => import('./features/journey/resumo/resumo.component').then(m => m.ResumoComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'login',
     loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent),
     canActivate: [guestGuard],

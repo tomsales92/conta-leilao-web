@@ -1,0 +1,75 @@
+<div class="page">
+  <app-header></app-header>
+
+  <div class="content">
+    <h1 class="title">Pós Imissão</h1>
+    <app-progress-timeline [currentStep]="currentStep()" [totalSteps]="totalSteps()"></app-progress-timeline>
+
+    <form class="form">
+      <div class="field">
+        <label class="label" for="condominiumDebt">Dívida de Condomínio</label>
+        <input
+          id="condominiumDebt"
+          type="text"
+          inputmode="numeric"
+          class="input"
+          mask="separator.2"
+          thousandSeparator="."
+          decimalMarker=","
+          [leadZero]="true"
+          [allowNegativeNumbers]="false"
+          [ngModel]="condominiumDebt()"
+          (ngModelChange)="condominiumDebt.set($event)"
+          name="condominiumDebt"
+          placeholder="Valor do Condomínio em aberto"
+        />
+      </div>
+
+      <div class="field">
+        <label class="label" for="iptuDebt">Dívida IPTU</label>
+        <input
+          id="iptuDebt"
+          type="text"
+          inputmode="numeric"
+          class="input"
+          mask="separator.2"
+          thousandSeparator="."
+          decimalMarker=","
+          [leadZero]="true"
+          [allowNegativeNumbers]="false"
+          [ngModel]="iptuDebt()"
+          (ngModelChange)="iptuDebt.set($event)"
+          name="iptuDebt"
+          placeholder="Valor do IPTU em aberto"
+        />
+      </div>
+
+      <div class="field">
+        <label class="label" for="renovationValue">Valor da Reforma</label>
+        <input
+          id="renovationValue"
+          type="text"
+          inputmode="numeric"
+          class="input"
+          mask="separator.2"
+          thousandSeparator="."
+          decimalMarker=","
+          [leadZero]="true"
+          [allowNegativeNumbers]="false"
+          [ngModel]="renovationValue()"
+          (ngModelChange)="renovationValue.set($event)"
+          name="renovationValue"
+          placeholder="Valor da reforma"
+        />
+      </div>
+    </form>
+  </div>
+
+  <footer class="page-footer">
+    <app-journey-nav-buttons
+      voltarLink="/arrematacao"
+      [proximoDisabled]="!canNext()"
+      (proximo)="next()"
+    ></app-journey-nav-buttons>
+  </footer>
+</div>

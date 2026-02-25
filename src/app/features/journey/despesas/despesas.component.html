@@ -1,0 +1,71 @@
+<div class="page">
+  <app-header></app-header>
+
+  <div class="content">
+    <h1 class="title">Despesas</h1>
+    <app-progress-timeline [currentStep]="currentStep()" [totalSteps]="totalSteps()"></app-progress-timeline>
+
+    <form class="form">
+      <div class="field">
+        <label class="label" for="propertyHoldMonths">Por quanto tempo deseja manter o imóvel?</label>
+        <input
+          id="propertyHoldMonths"
+          type="number"
+          inputmode="numeric"
+          min="1"
+          class="input"
+          [ngModel]="propertyHoldMonths()"
+          (ngModelChange)="propertyHoldMonths.set(toStr($event))"
+          name="propertyHoldMonths"
+          placeholder="Margem de Segurança 12 meses"
+        />
+      </div>
+
+      <div class="field">
+        <label class="label" for="monthlyCondominiumFee">Taxa do condomínio</label>
+        <input
+          id="monthlyCondominiumFee"
+          type="text"
+          inputmode="numeric"
+          class="input"
+          mask="separator.2"
+          thousandSeparator="."
+          decimalMarker=","
+          [leadZero]="true"
+          [allowNegativeNumbers]="false"
+          [ngModel]="monthlyCondominiumFee()"
+          (ngModelChange)="monthlyCondominiumFee.set($event)"
+          name="monthlyCondominiumFee"
+          placeholder="Valor do condomínio mensal"
+        />
+      </div>
+
+      <div class="field">
+        <label class="label" for="monthlyIptuValue">Valor do IPTU anual</label>
+        <input
+          id="monthlyIptuValue"
+          type="text"
+          inputmode="numeric"
+          class="input"
+          mask="separator.2"
+          thousandSeparator="."
+          decimalMarker=","
+          [leadZero]="true"
+          [allowNegativeNumbers]="false"
+          [ngModel]="monthlyIptuValue()"
+          (ngModelChange)="monthlyIptuValue.set($event)"
+          name="monthlyIptuValue"
+          placeholder="Valor do IPTU mensal"
+        />
+      </div>
+    </form>
+  </div>
+
+  <footer class="page-footer">
+    <app-journey-nav-buttons
+      voltarLink="/pos-imissao"
+      [proximoDisabled]="!canNext()"
+      (proximo)="next()"
+    ></app-journey-nav-buttons>
+  </footer>
+</div>
