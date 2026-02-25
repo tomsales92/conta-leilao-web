@@ -32,7 +32,7 @@ export class FormaPagamentoComponent {
   select(id: PaymentMethodId): void {
     const current = this.journey.paymentMethod();
     if (id !== current) {
-      this.journey.clearAllData();
+      this.journey.clearJourneyFormData(); // mantém journeyStarted para Voltar/Próximo continuarem funcionando
     }
     this.journey.setPaymentMethod(id);
     this.selected.set(id);

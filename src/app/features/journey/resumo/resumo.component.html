@@ -36,7 +36,7 @@
         </div>
         <div class="row">
           <span class="label">Lucro líquido total</span>
-          <span class="value" [class.positive]="result.netProfit > 0" [class.negative]="result.netProfit < 0">{{ formatCurrency(result.netProfit) }}</span>
+          <span class="value value-net-profit" [class.positive]="result.netProfit > 0" [class.negative]="result.netProfit < 0">{{ formatCurrency(result.netProfit) }}</span>
         </div>
 
         <button type="button" class="link-detail" (click)="showDetails.set(!showDetails())">

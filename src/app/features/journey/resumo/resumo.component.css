@@ -40,15 +40,15 @@
   font-size: 1rem;
   font-weight: 600;
   margin: 0 0 1rem;
+  text-align: center;
 }
 
 .row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.5rem;
   margin-bottom: 0.75rem;
-  flex-wrap: nowrap;
 }
 
 .row .label {
@@ -56,8 +56,9 @@
   align-items: center;
   gap: 0.25rem;
   font-size: 14px;
-  white-space: nowrap;
+  white-space: normal;
   min-width: 0;
+  flex: 1;
 }
 
 .row .label span {
@@ -85,6 +86,10 @@
 .row .value.negative {
   color: #ff6b6b;
   font-weight: 600;
+}
+
+.row .value.value-net-profit {
+  font-size: 20px;
 }
 
 .link-detail {

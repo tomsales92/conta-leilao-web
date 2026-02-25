@@ -1,12 +1,12 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/auth.guard';
+import { journeyGuard } from './core/guards/journey.guard';
 
 export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent),
-    canActivate: [authGuard],
   },
   {
     path: 'onboarding',
@@ -16,37 +16,37 @@ export const routes: Routes = [
   {
     path: 'forma-pagamento',
     loadComponent: () => import('./features/journey/forma-pagamento/forma-pagamento.component').then(m => m.FormaPagamentoComponent),
-    canActivate: [authGuard],
+    canActivate: [authGuard, journeyGuard],
   },
   {
     path: 'financiamento',
     loadComponent: () => import('./features/journey/financiamento/financiamento.component').then(m => m.FinanciamentoComponent),
-    canActivate: [authGuard],
+    canActivate: [authGuard, journeyGuard],
   },
   {
     path: 'arrematacao',
     loadComponent: () => import('./features/journey/arrematacao/arrematacao.component').then(m => m.ArrematacaoComponent),
-    canActivate: [authGuard],
+    canActivate: [authGuard, journeyGuard],
   },
   {
     path: 'pos-imissao',
     loadComponent: () => import('./features/journey/pos-imissao/pos-imissao.component').then(m => m.PosImissaoComponent),
-    canActivate: [authGuard],
+    canActivate: [authGuard, journeyGuard],
   },
   {
     path: 'despesas',
     loadComponent: () => import('./features/journey/despesas/despesas.component').then(m => m.DespesasComponent),
-    canActivate: [authGuard],
+    canActivate: [authGuard, journeyGuard],
   },
   {
     path: 'venda',
     loadComponent: () => import('./features/journey/venda/venda.component').then(m => m.VendaComponent),
-    canActivate: [authGuard],
+    canActivate: [authGuard, journeyGuard],
   },
   {
     path: 'resumo',
     loadComponent: () => import('./features/journey/resumo/resumo.component').then(m => m.ResumoComponent),
-    canActivate: [authGuard],
+    canActivate: [authGuard, journeyGuard],
   },
   {
     path: 'login',

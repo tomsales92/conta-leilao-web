@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { JourneyStateService } from '../../core/services/journey-state.service';
 import { HeaderComponent } from '../../shared/components/header/header.component';
@@ -7,15 +7,23 @@ import { HeaderComponent } from '../../shared/components/header/header.component
 @Component({
   selector: 'app-onboarding',
   standalone: true,
-  imports: [RouterLink, HeaderComponent],
+  imports: [HeaderComponent],
   templateUrl: './onboarding.component.html',
   styleUrl: './onboarding.component.css',
 })
 export class OnboardingComponent {
   protected readonly auth = inject(AuthService);
+  private readonly journey = inject(JourneyStateService);
+  private readonly router = inject(Router);
 
   constructor() {
-    inject(JourneyStateService).clearAllData();
+    this.journey.clearAllData(); // zera tudo ao entrar no onboarding
+  }
+
+  /** Inicia a jornada e navega para forma de pagamento (acesso apenas pelo fluxo, não por URL). */
+  startJourney(): void {
+    this.journey.setJourneyStarted(true);
+    this.router.navigate(['/forma-pagamento']);
   }
 
   protected get firstName(): string {

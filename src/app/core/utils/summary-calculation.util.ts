@@ -47,6 +47,22 @@ function num(v: number | null | undefined): number {
   return v ?? 0;
 }
 
+function safeRatio(numerator: number, denominator: number): number {
+  return denominator > 0 ? numerator / denominator : 0;
+}
+
+function monthlyCompoundRoi(roiDecimal: number, months: number): number {
+  if (months <= 0) return 0;
+  const base = 1 + roiDecimal;
+  if (base <= 0) return 0;
+  return Math.pow(base, 1 / months) - 1;
+}
+
+function monthlyInterestFromAnnual(annualRate: number): number {
+  if (annualRate <= 0) return 0;
+  return Math.pow(1 + annualRate, 1 / 12) - 1;
+}
+
 /** Custos de aquisição (comissão, ITBI, registro, desocupação, reforma, dívidas) */
 function acquisitionCosts(
   auctionValue: number,
@@ -78,17 +94,98 @@ function brokerCommission(saleValue: number, venda: VendaData): number {
   return rate ? saleValue * rate : saleValue * 0.06;
 }
 
-/** IR sobre ganho de capital (valor real venda - custo fiscal) */
-function incomeTax(
+/** IR do cenário à vista baseado na estrutura da planilha */
+function incomeTaxCash(
   saleValue: number,
   brokerComm: number,
   auctionValue: number,
-  acquisitionCostsVal: number,
+  arrem: ArrematacaoData,
+  pos: PosImissaoData,
   venda: VendaData
 ): number {
-  const realSale = saleValue - brokerComm;
-  const fiscalCost = auctionValue + acquisitionCostsVal;
-  const gain = realSale - fiscalCost;
+  const commissionLeiloeiro = auctionValue * pct(arrem.commissionPercentage);
+  const itbi = auctionValue * pct(arrem.itbiPercentage);
+  const registro = num(arrem.propertyRegistrationValue);
+  const reforma = num(pos.renovationValue);
+  const gain = saleValue - brokerComm - (auctionValue + commissionLeiloeiro + itbi + registro + reforma);
+  if (gain <= 0) return 0;
+  const rate = pct(venda.incomeTaxPercentage) || 0.15;
+  return gain * rate;
+}
+
+interface FinancingPeriodResult {
+  installmentsPaidInPeriod: number;
+  outstandingBalance: number;
+}
+
+function financingPeriodCost(
+  principal: number,
+  monthlyRate: number,
+  totalMonths: number,
+  monthsHeld: number,
+  modality: FinancingData['modality']
+): FinancingPeriodResult {
+  const n = Math.max(1, totalMonths);
+  const monthsInPeriod = Math.max(0, Math.min(monthsHeld, n));
+  if (principal <= 0 || monthsInPeriod === 0) {
+    return { installmentsPaidInPeriod: 0, outstandingBalance: Math.max(0, principal) };
+  }
+
+  let outstanding = principal;
+  let installmentsPaidInPeriod = 0;
+
+  if (modality === 'PRICE') {
+    const payment =
+      monthlyRate === 0
+        ? principal / n
+        : principal * (Math.pow(1 + monthlyRate, n) * monthlyRate) / (Math.pow(1 + monthlyRate, n) - 1);
+
+    for (let t = 1; t <= monthsInPeriod; t++) {
+      const interest = outstanding * monthlyRate;
+      const amortization = payment - interest;
+      installmentsPaidInPeriod += payment;
+      outstanding = Math.max(0, outstanding - amortization);
+    }
+  } else {
+    const amortization = principal / n;
+    for (let t = 1; t <= monthsInPeriod; t++) {
+      const interest = outstanding * monthlyRate;
+      const installment = amortization + interest;
+      installmentsPaidInPeriod += installment;
+      outstanding = Math.max(0, outstanding - amortization);
+    }
+  }
+
+  return {
+    installmentsPaidInPeriod,
+    outstandingBalance: outstanding,
+  };
+}
+
+/** IR do cenário financiado baseado na estrutura da planilha */
+function incomeTaxFinanced(
+  saleValue: number,
+  brokerComm: number,
+  installmentsPaidInPeriod: number,
+  outstandingBalance: number,
+  auctionValue: number,
+  arrem: ArrematacaoData,
+  pos: PosImissaoData,
+  venda: VendaData
+): number {
+  const commissionLeiloeiro = auctionValue * pct(arrem.commissionPercentage);
+  const itbi = auctionValue * pct(arrem.itbiPercentage);
+  const registro = num(arrem.propertyRegistrationValue);
+  const reforma = num(pos.renovationValue);
+
+  const gain = saleValue - brokerComm - (
+    installmentsPaidInPeriod
+    + outstandingBalance
+    + commissionLeiloeiro
+    + itbi
+    + registro
+    + reforma
+  );
   if (gain <= 0) return 0;
   const rate = pct(venda.incomeTaxPercentage) || 0.15;
   return gain * rate;
@@ -121,11 +218,12 @@ function calculateCash(input: SummaryInput): CashResult | null {
   const carry = carryingCosts(despesas);
   const totalCosts = auctionValue + acq + carry;
   const broker = brokerCommission(saleValue, venda);
-  const ir = incomeTax(saleValue, broker, auctionValue, acq, venda);
+  const ir = incomeTaxCash(saleValue, broker, auctionValue, arrem, pos, venda);
   const realSale = saleValue - broker - ir;
   const netProfit = realSale - totalCosts;
-  const roiTotal = totalCosts > 0 ? (netProfit / totalCosts) * 100 : 0;
-  const roiMonthly = months > 0 ? roiTotal / months : 0;
+  const roiTotalDecimal = safeRatio(netProfit, totalCosts);
+  const roiTotal = roiTotalDecimal * 100;
+  const roiMonthly = monthlyCompoundRoi(roiTotalDecimal, months) * 100;
 
   return {
     downPaymentOrAuction: auctionValue,
@@ -168,27 +266,29 @@ function calculateFinanced(input: SummaryInput): FinancedResult | null {
 
   const downPayment = auctionValue * downPct;
   const V = auctionValue - downPayment;
-  const i = annualRate / 12;
-  const n = totalMonths;
-  const amortization = V / n;
-
-  let financingCostPeriod = 0;
-  for (let t = 1; t <= months && t <= n; t++) {
-    const prevBalance = V - amortization * (t - 1);
-    const interest = prevBalance * i;
-    financingCostPeriod += amortization + interest;
-  }
-
-  const outstandingBalance = Math.max(0, V - amortization * months);
+  const i = monthlyInterestFromAnnual(annualRate);
+  const financingPeriod = financingPeriodCost(V, i, totalMonths, months, fin.modality);
+  const financingCostPeriod = financingPeriod.installmentsPaidInPeriod;
+  const outstandingBalance = financingPeriod.outstandingBalance;
   const acq = acquisitionCosts(auctionValue, arrem, pos);
   const carry = carryingCosts(despesas);
-  const totalCosts = downPayment + acq + carry + financingCostPeriod;
+  const totalCosts = acq + carry + financingCostPeriod;
   const broker = brokerCommission(saleValue, venda);
-  const ir = incomeTax(saleValue, broker, auctionValue, acq, venda);
-  const realSale = saleValue - broker - ir;
-  const netProfit = realSale - totalCosts - outstandingBalance;
-  const roiTotal = totalCosts > 0 ? (netProfit / totalCosts) * 100 : 0;
-  const roiMonthly = months > 0 ? roiTotal / months : 0;
+  const ir = incomeTaxFinanced(
+    saleValue,
+    broker,
+    financingCostPeriod,
+    outstandingBalance,
+    auctionValue,
+    arrem,
+    pos,
+    venda
+  );
+  const realSale = saleValue - broker - ir - outstandingBalance;
+  const netProfit = realSale - totalCosts;
+  const roiTotalDecimal = safeRatio(netProfit, totalCosts);
+  const roiTotal = roiTotalDecimal * 100;
+  const roiMonthly = monthlyCompoundRoi(roiTotalDecimal, months) * 100;
 
   return {
     downPaymentOrAuction: downPayment,

@@ -83,12 +83,15 @@ const INITIAL_VENDA: VendaData = {
 
 @Injectable({ providedIn: 'root' })
 export class JourneyStateService {
+  private readonly journeyStartedSignal = signal<boolean>(false);
   private readonly paymentMethodSignal = signal<PaymentMethodId | null>(null);
   private readonly financingDataSignal = signal<FinancingData>({ ...INITIAL_FINANCING });
   private readonly arrematacaoDataSignal = signal<ArrematacaoData>({ ...INITIAL_ARREMATACAO });
   private readonly posImissaoDataSignal = signal<PosImissaoData>({ ...INITIAL_POS_IMISSAO });
   private readonly despesasDataSignal = signal<DespesasData>({ ...INITIAL_DESPESAS });
   private readonly vendaDataSignal = signal<VendaData>({ ...INITIAL_VENDA });
+
+  readonly journeyStarted = this.journeyStartedSignal.asReadonly();
 
   readonly paymentMethod = this.paymentMethodSignal.asReadonly();
   readonly financingData = this.financingDataSignal.asReadonly();
@@ -102,6 +105,10 @@ export class JourneyStateService {
     const method = this.paymentMethodSignal();
     return method === 'financed' ? 6 : 5;
   });
+
+  setJourneyStarted(value: boolean): void {
+    this.journeyStartedSignal.set(value);
+  }
 
   setPaymentMethod(id: PaymentMethodId): void {
     this.paymentMethodSignal.set(id);
@@ -130,7 +137,20 @@ export class JourneyStateService {
     this.vendaDataSignal.update((prev) => ({ ...prev, ...data }));
   }
 
+  /**
+   * Zera todo o estado da jornada (incluindo journeyStarted).
+   * Use ao sair da jornada (onboarding, confirmação no resumo) ou ao iniciar do zero.
+   */
   clearAllData(): void {
+    this.journeyStartedSignal.set(false);
+    this.clearJourneyFormData();
+  }
+
+  /**
+   * Zera apenas os dados do formulário da jornada, mantendo journeyStarted.
+   * Use ao trocar opções dentro da jornada (ex.: forma de pagamento).
+   */
+  clearJourneyFormData(): void {
     this.paymentMethodSignal.set(null);
     this.financingDataSignal.set({ ...INITIAL_FINANCING });
     this.arrematacaoDataSignal.set({ ...INITIAL_ARREMATACAO });

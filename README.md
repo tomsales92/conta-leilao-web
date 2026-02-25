@@ -49,6 +49,12 @@ For a complete list of available schematics (such as `components`, `directives`,
 ng generate --help
 ```
 
+## Deploy (Vercel)
+
+- **Branch de produção:** `master`
+- No Vercel: **Project Settings → Git → Production Branch** → use `master` (ou deixe o padrão).
+- O `vercel.json` na raiz já configura o build e o diretório de saída (`dist/conta-leilao-web/browser`) e as rewrites para SPA.
+
 ## Building
 
 To build the project run:

@@ -93,6 +93,7 @@
   max-width: 240px;
   height: 52px;
   padding: 0 1rem;
+  margin: 0;
   font-family: 'Poppins', sans-serif;
   font-size: 16px;
   font-weight: 500;
@@ -104,6 +105,7 @@
   cursor: pointer;
   transition: background 0.2s;
   white-space: nowrap;
+  box-sizing: border-box;
 }
 
 .btn-action:hover {

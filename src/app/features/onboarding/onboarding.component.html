@@ -13,15 +13,15 @@
     </div>
 
     <div class="actions">
-      <a routerLink="/forma-pagamento" class="btn-action">
+      <button type="button" class="btn-action" (click)="startJourney()">
         <img src="/assets/images/calculator.svg" alt="" width="24" height="24" aria-hidden="true" />
         <span>Calculadora</span>
-      </a>
-      <a routerLink="/forma-pagamento" class="btn-action btn-premium">
+      </button>
+      <button type="button" class="btn-action btn-premium" (click)="startJourney()">
         <img src="/assets/images/search.svg" alt="" width="24" height="24" aria-hidden="true" />
         <span>Analisar Matrícula</span>
         <img class="crown" src="/assets/images/coroa-premium.svg" alt="" width="42" height="42" aria-hidden="true" />
-      </a>
+      </button>
     </div>
   </div>
 </div>
