@@ -1,6 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -10,6 +9,5 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrl: './home.component.css',
 })
 export class HomeComponent {
-  protected readonly auth = inject(AuthService);
   protected readonly currentYear = new Date().getFullYear();
 }
