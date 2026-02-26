@@ -1,0 +1,20 @@
+<app-header></app-header>
+<div class="page">
+  <h1>Acesso negado ao Admin</h1>
+  <p class="lead">Você não tem permissão para acessar a área de administração.</p>
+
+  <div class="steps">
+    <p><strong>Para liberar acesso:</strong></p>
+    <ol>
+      <li>Abra o <strong>Supabase</strong> → seu projeto → <strong>Table Editor</strong> → tabela <strong>profiles</strong>.</li>
+      <li>Encontre a linha do seu usuário (pelo mesmo e-mail que você usa para logar).</li>
+      <li>Na coluna <strong>role</strong>, altere de <code>user</code> para <code>admin</code> e salve.</li>
+      <li>Faça <strong>logout</strong> no app e entre de novo.</li>
+      <li>Tente acessar <strong>/admin</strong> novamente.</li>
+    </ol>
+  </div>
+
+  <p class="hint">Se as colunas <code>plan</code> e <code>role</code> não existirem na tabela, execute o arquivo <code>supabase_migration_plan_role.sql</code> no SQL Editor do Supabase.</p>
+
+  <a routerLink="/" class="btn">Voltar para o início</a>
+</div>

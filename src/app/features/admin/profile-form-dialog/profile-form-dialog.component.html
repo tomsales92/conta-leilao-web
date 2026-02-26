@@ -1,0 +1,40 @@
+<div class="form-dialog">
+  <h2 class="form-title">{{ isEdit ? 'Editar usuário' : 'Adicionar usuário' }}</h2>
+  <form (ngSubmit)="save()" class="form">
+    <label class="label">E-mail</label>
+    <input type="email" class="input" [(ngModel)]="email" name="email" placeholder="E-mail" required />
+    @if (!isEdit) {
+      <label class="label">Senha temporária</label>
+      <input type="password" class="input" [(ngModel)]="password" name="password" placeholder="Senha para o usuário acessar" minlength="6" required />
+      <p class="hint">O usuário usará este e-mail e esta senha para fazer login. Passe a senha para ele com segurança.</p>
+    }
+    <label class="label">Nome</label>
+    <input type="text" class="input" [(ngModel)]="firstName" name="firstName" placeholder="Nome" />
+    <label class="label">Sobrenome</label>
+    <input type="text" class="input" [(ngModel)]="lastName" name="lastName" placeholder="Sobrenome" />
+    <label class="label">Data de nascimento</label>
+    <input type="date" class="input" [(ngModel)]="dateOfBirth" name="dateOfBirth" />
+    <label class="label">Gênero</label>
+    <select class="input" [(ngModel)]="gender" name="gender">
+      <option value="">Selecione</option>
+      <option value="M">Masculino</option>
+      <option value="F">Feminino</option>
+    </select>
+    <label class="label">Plano</label>
+    <select class="input" [(ngModel)]="plan" name="plan">
+      @for (opt of planOptions; track opt) {
+        <option [value]="opt">{{ opt === 'free' ? 'Free' : 'Premium' }}</option>
+      }
+    </select>
+    <label class="label">Perfil</label>
+    <select class="input" [(ngModel)]="role" name="role">
+      @for (opt of roleOptions; track opt) {
+        <option [value]="opt">{{ opt === 'user' ? 'Usuário' : 'Admin' }}</option>
+      }
+    </select>
+    <div class="actions">
+      <button type="button" class="btn btn-cancel" (click)="cancel()">Cancelar</button>
+      <button type="submit" class="btn btn-save">Salvar</button>
+    </div>
+  </form>
+</div>

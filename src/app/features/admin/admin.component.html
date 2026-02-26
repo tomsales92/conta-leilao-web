@@ -1,0 +1,55 @@
+<div class="admin-page">
+  <app-header></app-header>
+  <div class="content">
+    <div class="header-row">
+      <h1 class="title">Administração — Usuários</h1>
+      <button type="button" class="btn-add" (click)="add()">Adicionar</button>
+    </div>
+
+    @if (error(); as err) {
+      <div class="error-msg">{{ err }}</div>
+    }
+
+    @if (loading()) {
+      <p class="loading">Carregando usuários...</p>
+    } @else {
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>E-mail</th>
+              <th>Nome</th>
+              <th>Sobrenome</th>
+              <th>Nascimento</th>
+              <th>Gênero</th>
+              <th>Plano</th>
+              <th>Perfil</th>
+              <th class="th-actions">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of profiles(); track p.id) {
+              <tr>
+                <td>{{ p.email ?? '—' }}</td>
+                <td>{{ p.first_name ?? '—' }}</td>
+                <td>{{ p.last_name ?? '—' }}</td>
+                <td>{{ p.date_of_birth ?? '—' }}</td>
+                <td>{{ p.gender === 'M' ? 'M' : p.gender === 'F' ? 'F' : '—' }}</td>
+                <td>{{ p.plan ?? '—' }}</td>
+                <td>{{ p.role === 'admin' ? 'Admin' : p.role === 'user' ? 'Usuário' : '—' }}</td>
+                <td class="td-actions">
+                  <button type="button" class="btn-action btn-edit" (click)="edit(p)">Editar</button>
+                  <button type="button" class="btn-action btn-delete" (click)="remove(p)">Excluir</button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="8" class="empty">Nenhum usuário cadastrado.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

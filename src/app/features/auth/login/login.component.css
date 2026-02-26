@@ -78,6 +78,20 @@
   line-height: 1.4;
 }
 
+.success {
+  width: 100%;
+  max-width: 348px;
+  padding: 0.5rem 0;
+  margin-bottom: 0.5rem;
+  color: #047857;
+  background: none;
+  border: none;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
 /* Largura fixa do formulário para evitar quebra com autofill/sugestões do navegador */
 .login-form {
   width: 100%;

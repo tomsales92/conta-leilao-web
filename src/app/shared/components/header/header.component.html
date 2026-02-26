@@ -1,4 +1,7 @@
 <header class="app-header">
+  @if (isAdmin) {
+    <a routerLink="/admin" class="link-admin">Admin</a>
+  }
   <button type="button" class="btn-sair" (click)="auth.signOut()" aria-label="Sair">
     <img src="/assets/images/sair.svg" alt="" width="84" height="41" aria-hidden="true" />
   </button>

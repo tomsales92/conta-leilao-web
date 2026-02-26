@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, inject, signal, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import {
   AUTH_STORAGE_KEYS,
@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
 
   protected error = '';
@@ -31,6 +32,10 @@ export class LoginComponent implements OnInit {
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
   });
+
+  protected get showUserCreatedMessage(): boolean {
+    return this.route.snapshot.queryParams['user_created'] === '1';
+  }
 
   ngOnInit(): void {
     this.loadSavedCredentials();

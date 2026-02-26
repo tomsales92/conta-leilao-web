@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/auth.guard';
 import { journeyGuard } from './core/guards/journey.guard';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -47,6 +48,16 @@ export const routes: Routes = [
     path: 'resumo',
     loadComponent: () => import('./features/journey/resumo/resumo.component').then(m => m.ResumoComponent),
     canActivate: [authGuard, journeyGuard],
+  },
+  {
+    path: 'admin',
+    loadComponent: () => import('./features/admin/admin.component').then(m => m.AdminComponent),
+    canActivate: [authGuard, adminGuard],
+  },
+  {
+    path: 'admin-negado',
+    loadComponent: () => import('./features/admin-denied/admin-denied.component').then(m => m.AdminDeniedComponent),
+    canActivate: [authGuard],
   },
   {
     path: 'login',

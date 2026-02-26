@@ -7,6 +7,9 @@
   <div class="login-content">
     <img class="logo" src="/assets/images/logo-contaleilao.svg" alt="Conta Leilão" width="80" height="80" />
 
+    @if (showUserCreatedMessage) {
+      <div class="success" role="status">Usuário criado. Faça login com sua conta de admin.</div>
+    }
     @if (error) {
       <div class="error" role="alert">{{ error }}</div>
     }
