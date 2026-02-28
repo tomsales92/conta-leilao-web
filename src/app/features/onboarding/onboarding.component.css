@@ -130,6 +130,16 @@
   margin-bottom: 0.25rem;
 }
 
+.complete-form .btn-action {
+  height: 52px;
+  min-height: 52px;
+  max-height: 52px;
+  margin-top: 0.25rem;
+  align-self: stretch;
+  width: 100%;
+  max-width: 100%;
+}
+
 @media (max-width: 480px) {
   .tagline {
     white-space: normal;
