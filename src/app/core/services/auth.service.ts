@@ -53,13 +53,35 @@ export class AuthService {
       this.sessionSignal.set(session);
       this.currentUserSignal.set(session?.user ?? null);
       this.loadLoginTimestamp();
+      // Não limpar a URL aqui: o hash pode ainda não ter sido processado. Só limpar em onAuthStateChange(SIGNED_IN).
     });
     this.supabase.client.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
       this.sessionSignal.set(session);
       this.currentUserSignal.set(session?.user ?? null);
       if (event === 'SIGNED_OUT') this.clearLoginTimestamp();
-      if (event === 'SIGNED_IN' && session) this.saveLoginTimestamp();
+      if (event === 'SIGNED_IN' && session) {
+        this.saveLoginTimestamp();
+        this.clearAuthParamsFromUrl();
+      }
     });
+  }
+
+  /**
+   * Remove access_token, refresh_token etc. do hash da URL após o OAuth redirect,
+   * e redireciona para /onboarding quando o usuário caiu na raiz (login com Google).
+   */
+  private clearAuthParamsFromUrl(): void {
+    if (typeof window === 'undefined' || !window.history.replaceState) return;
+    const hash = window.location.hash;
+    if (!hash) return;
+    if (!/access_token|refresh_token|code=/.test(hash)) return;
+    const path = window.location.pathname || '/';
+    const isRoot = path === '/' || path === '';
+    const cleanUrl = window.location.origin + path + window.location.search;
+    window.history.replaceState(null, '', cleanUrl);
+    if (isRoot) {
+      this.router.navigate(['/onboarding'], { replaceUrl: true });
+    }
   }
 
   private getStoredLoginAt(): number | null {

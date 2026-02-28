@@ -124,17 +124,30 @@ export class LoginComponent implements OnInit {
 
   private isProviderNotEnabledError(e: unknown): boolean {
     if (!e || typeof e !== 'object') return false;
-    const o = e as { error_code?: string; msg?: string };
-    return (
-      o.error_code === 'validation_failed' &&
-      /provider.*not enabled|unsupported provider/i.test(o.msg ?? '')
-    );
+    const o = e as { error_code?: string; msg?: string; message?: string };
+    const text = o.msg ?? o.message ?? '';
+    if (o.error_code === 'validation_failed' && /provider.*not enabled|unsupported provider/i.test(text)) {
+      return true;
+    }
+    if (e instanceof Error && /provider.*not enabled|unsupported provider/i.test(e.message)) return true;
+    return false;
   }
 
   private getErrorMessage(e: unknown): string {
-    if (e instanceof Error) return e.message;
-    if (e && typeof e === 'object' && 'message' in e && typeof (e as { message: unknown }).message === 'string') {
-      return (e as { message: string }).message;
+    if (e instanceof Error) {
+      const m = e.message;
+      try {
+        const parsed = JSON.parse(m) as { msg?: string };
+        if (typeof parsed?.msg === 'string') return parsed.msg;
+      } catch {
+        // not JSON
+      }
+      return m;
+    }
+    if (e && typeof e === 'object') {
+      const o = e as { message?: string; msg?: string };
+      if (typeof o.msg === 'string') return o.msg;
+      if (typeof o.message === 'string') return o.message;
     }
     return '';
   }

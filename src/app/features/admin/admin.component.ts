@@ -1,8 +1,8 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { Dialog } from '@angular/cdk/dialog';
 import { HeaderComponent } from '../../shared/components/header/header.component';
-import { ConfirmExitDialogComponent } from '../../shared/components/confirm-exit-dialog/confirm-exit-dialog.component';
 import { ProfileFormDialogComponent } from './profile-form-dialog/profile-form-dialog.component';
+import { ConfirmDeleteUserDialogComponent } from './confirm-delete-user-dialog/confirm-delete-user-dialog.component';
 import { AdminService, type Profile, type ProfileInsertWithPassword, type ProfileUpdate } from '../../core/services/admin.service';
 
 @Component({
@@ -60,17 +60,15 @@ export class AdminComponent implements OnInit {
   }
 
   async remove(profile: Profile): Promise<void> {
-    const ref = this.dialog.open(ConfirmExitDialogComponent, {
-      data: {
-        title: 'Excluir usuário?',
-        message: `Deseja realmente excluir ${profile.email ?? profile.first_name ?? profile.id}? Esta ação não pode ser desfeita.`,
-      },
-      panelClass: 'app-confirm-exit-dialog-panel',
+    const ref = this.dialog.open(ConfirmDeleteUserDialogComponent, {
+      data: { profile },
+      panelClass: 'app-admin-dialog-panel',
     });
     const confirmed = await ref.closed.toPromise();
     if (confirmed !== true) return;
     try {
       await this.admin.deleteProfile(profile.id);
+      this.error.set(null);
       await this.load();
     } catch (e) {
       this.error.set(e instanceof Error ? e.message : 'Erro ao excluir usuário.');

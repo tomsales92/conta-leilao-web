@@ -55,6 +55,81 @@
   white-space: nowrap;
 }
 
+.loading-msg {
+  margin: 2rem 0;
+  font-size: 1rem;
+}
+
+.complete-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+.complete-desc {
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+  opacity: 0.95;
+}
+
+.complete-form {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: left;
+}
+
+.complete-form .field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.complete-form .label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.complete-form input[type="text"],
+.complete-form input[type="date"] {
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+}
+
+.complete-form input::placeholder {
+  color: rgba(255,255,255,0.7);
+}
+
+.gender-options {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.gender-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: 400;
+}
+
+.gender-option input {
+  width: auto;
+}
+
+.form-error {
+  font-size: 0.875rem;
+  color: #ffd6d6;
+  margin-bottom: 0.25rem;
+}
+
 @media (max-width: 480px) {
   .tagline {
     white-space: normal;

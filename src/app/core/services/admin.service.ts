@@ -121,6 +121,30 @@ export class AdminService {
     return data as Profile;
   }
 
+  /**
+   * Cria ou atualiza o perfil do usuário (útil quando o trigger não criou o perfil, ex.: login Google).
+   * RLS deve permitir INSERT com auth.uid() = id.
+   */
+  async upsertProfile(id: string, profile: ProfileUpdate & { email?: string | null }): Promise<Profile> {
+    const row = {
+      id,
+      email: profile.email ?? null,
+      first_name: profile.first_name ?? null,
+      last_name: profile.last_name ?? null,
+      date_of_birth: profile.date_of_birth ?? null,
+      gender: profile.gender ?? null,
+      plan: profile.plan ?? 'free',
+      role: profile.role ?? 'user',
+    };
+    const { data, error } = await this.supabase.client
+      .from(TABLE)
+      .upsert(row, { onConflict: 'id' })
+      .select()
+      .single();
+    if (error) throw error;
+    return data as Profile;
+  }
+
   async deleteProfile(id: string): Promise<void> {
     const { error } = await this.supabase.client.from(TABLE).delete().eq('id', id);
     if (error) throw error;

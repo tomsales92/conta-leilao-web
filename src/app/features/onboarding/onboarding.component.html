@@ -2,26 +2,67 @@
   <app-header></app-header>
 
   <div class="onboarding-content">
-    <img class="logo" src="/assets/images/logo-contaleilao.svg" alt="Conta Leilão" />
-    <h1 class="welcome">
-      Olá <span class="welcome-name">{{ firstName || 'usuário' }}</span>, <span class="welcome-word">{{ welcomeWord }}</span>
-    </h1>
-    <p class="tagline">ao site que te ajuda a calcular a viabilidade do Leilão.</p>
+    @if (loadingProfile()) {
+      <p class="loading-msg">Carregando...</p>
+    } @else if (profileIncomplete) {
+      <img class="logo" src="/assets/images/logo-contaleilao.svg" alt="Conta Leilão" />
+      <h2 class="complete-title">Complete seu perfil</h2>
+      <p class="complete-desc">Preencha os dados abaixo para continuar (quem entrou pelo Google pode não ter nome e data de nascimento).</p>
+      <form class="complete-form" [formGroup]="form" (ngSubmit)="submitCompleteProfile()">
+        @if (profileError(); as err) {
+          <div class="form-error" role="alert">{{ err }}</div>
+        }
+        <label class="field">
+          <span class="label">Nome</span>
+          <input type="text" formControlName="firstName" placeholder="Nome" />
+        </label>
+        <label class="field">
+          <span class="label">Sobrenome</span>
+          <input type="text" formControlName="lastName" placeholder="Sobrenome" />
+        </label>
+        <label class="field">
+          <span class="label">Data de nascimento</span>
+          <input type="date" formControlName="dateOfBirth" />
+        </label>
+        <div class="field">
+          <span class="label">Gênero</span>
+          <div class="gender-options">
+            <label class="gender-option">
+              <input type="radio" formControlName="gender" value="M" />
+              <span>Masculino</span>
+            </label>
+            <label class="gender-option">
+              <input type="radio" formControlName="gender" value="F" />
+              <span>Feminino</span>
+            </label>
+          </div>
+        </div>
+        <button type="submit" class="btn-action" [disabled]="savingProfile()">
+          {{ savingProfile() ? 'Salvando...' : 'Continuar' }}
+        </button>
+      </form>
+    } @else {
+      <img class="logo" src="/assets/images/logo-contaleilao.svg" alt="Conta Leilão" />
+      <h1 class="welcome">
+        Olá <span class="welcome-name">{{ firstName || 'usuário' }}</span>, <span class="welcome-word">{{ welcomeWord }}</span>
+      </h1>
+      <p class="tagline">ao site que te ajuda a calcular a viabilidade do Leilão.</p>
 
-    <div class="mascote-wrapper">
-      <img class="mascote" src="/assets/images/mascote.svg" alt="" width="280" height="280" aria-hidden="true" />
-    </div>
+      <div class="mascote-wrapper">
+        <img class="mascote" src="/assets/images/mascote.svg" alt="" width="280" height="280" aria-hidden="true" />
+      </div>
 
-    <div class="actions">
-      <button type="button" class="btn-action" (click)="startJourney()">
-        <img src="/assets/images/calculator.svg" alt="" width="24" height="24" aria-hidden="true" />
-        <span>Calculadora</span>
-      </button>
-      <button type="button" class="btn-action btn-premium" (click)="startJourney()">
-        <img src="/assets/images/search.svg" alt="" width="24" height="24" aria-hidden="true" />
-        <span>Analisar Matrícula</span>
-        <img class="crown" src="/assets/images/coroa-premium.svg" alt="" width="42" height="42" aria-hidden="true" />
-      </button>
-    </div>
+      <div class="actions">
+        <button type="button" class="btn-action" (click)="startJourney()">
+          <img src="/assets/images/calculator.svg" alt="" width="24" height="24" aria-hidden="true" />
+          <span>Calculadora</span>
+        </button>
+        <button type="button" class="btn-action btn-premium" (click)="startJourney()">
+          <img src="/assets/images/search.svg" alt="" width="24" height="24" aria-hidden="true" />
+          <span>Analisar Matrícula</span>
+          <img class="crown" src="/assets/images/coroa-premium.svg" alt="" width="42" height="42" aria-hidden="true" />
+        </button>
+      </div>
+    }
   </div>
 </div>

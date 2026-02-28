@@ -14,7 +14,12 @@ export class SupabaseService {
           'Supabase não configurado. Defina supabaseUrl e supabaseAnonKey em src/environments/environment.ts (copie do .env do teste-cursor).'
         );
       }
-      this._client = createClient(supabaseUrl, supabaseAnonKey);
+      this._client = createClient(supabaseUrl, supabaseAnonKey, {
+        auth: {
+          flowType: 'pkce',
+          detectSessionInUrl: true,
+        },
+      });
     }
     return this._client;
   }

@@ -14,7 +14,7 @@ export const AUTH_STORAGE_KEYS = {
 export const LOGIN_ERROR_MESSAGES = {
   invalidCredentials: 'E-mail ou senha incorretos. Verifique os dados e tente novamente.',
   providerNotEnabled:
-    'Login com Google não está disponível no momento. Use e-mail e senha para entrar.',
+    'Ative o provedor Google no Supabase: Authentication → Providers → Google (Client ID e Secret do Google Cloud).',
   generic: 'Erro ao entrar. Tente novamente.',
 } as const;
 

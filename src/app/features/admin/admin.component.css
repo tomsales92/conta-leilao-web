@@ -97,13 +97,19 @@
 
 .th-actions,
 .td-actions {
-  width: 1%;
   white-space: nowrap;
+  min-width: 140px;
 }
 
 .td-actions {
   display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
   gap: 0.5rem;
+}
+
+.td-actions .btn-action {
+  flex-shrink: 0;
 }
 
 .empty {
@@ -132,10 +138,11 @@
 }
 
 .btn-delete {
-  background: rgba(255, 100, 100, 0.9);
+  background: rgba(200, 60, 60, 0.95);
   color: #fff;
+  flex-shrink: 0;
 }
 
 .btn-delete:hover {
-  background: rgba(255, 80, 80, 1);
+  background: rgba(180, 50, 50, 1);
 }

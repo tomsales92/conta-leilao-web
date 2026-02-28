@@ -14,15 +14,33 @@ ALTER TABLE public.profiles
 UPDATE public.profiles SET plan = 'free' WHERE plan IS NULL;
 UPDATE public.profiles SET role = 'user' WHERE role IS NULL;
 
--- 2. Atualizar a função do trigger para novos usuários nascerem free + user
+-- 2. Atualizar a função do trigger: nome/sobrenome vêm do cadastro ou do Google (given_name, family_name, full_name)
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
+DECLARE
+  fn TEXT;
+  ln TEXT;
+  full_name TEXT;
 BEGIN
+  full_name := COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name', '');
+  fn := COALESCE(
+    NULLIF(TRIM(NEW.raw_user_meta_data->>'first_name'), ''),
+    NULLIF(TRIM(NEW.raw_user_meta_data->>'given_name'), ''),
+    NULLIF(TRIM(SPLIT_PART(full_name, ' ', 1)), '')
+  );
+  ln := COALESCE(
+    NULLIF(TRIM(NEW.raw_user_meta_data->>'last_name'), ''),
+    NULLIF(TRIM(NEW.raw_user_meta_data->>'family_name'), ''),
+    CASE WHEN POSITION(' ' IN full_name) > 0
+      THEN NULLIF(TRIM(SUBSTRING(full_name FROM POSITION(' ' IN full_name) + 1)), '')
+      ELSE NULL
+    END
+  );
   INSERT INTO public.profiles (id, first_name, last_name, date_of_birth, gender, email, plan, role)
   VALUES (
     NEW.id,
-    NEW.raw_user_meta_data->>'first_name',
-    NEW.raw_user_meta_data->>'last_name',
+    fn,
+    ln,
     (NEW.raw_user_meta_data->>'date_of_birth')::DATE,
     NEW.raw_user_meta_data->>'gender',
     NEW.email,

@@ -1,0 +1,35 @@
+<div class="dialog">
+  <img src="/assets/images/icons/alert.svg" alt="" class="dialog-icon" width="45" height="37" aria-hidden="true" />
+  <h2 class="dialog-title">Excluir usuário</h2>
+  <p class="dialog-message">
+    @if (hasName) {
+      Para confirmar, digite o <strong>nome</strong> e o <strong>sobrenome</strong> de <strong>{{ displayName }}</strong> exatamente como estão cadastrados.
+    } @else {
+      Este usuário não tem nome cadastrado. Digite o <strong>e-mail</strong> <strong>{{ displayName }}</strong> para confirmar a exclusão.
+    }
+  </p>
+  <form class="confirm-form" (ngSubmit)="confirm()">
+    @if (hasName) {
+      <label class="field">
+        <span class="label">Nome</span>
+        <input type="text" class="input" [(ngModel)]="firstNameConfirm" name="firstNameConfirm" placeholder="Nome cadastrado" />
+      </label>
+      <label class="field">
+        <span class="label">Sobrenome</span>
+        <input type="text" class="input" [(ngModel)]="lastNameConfirm" name="lastNameConfirm" placeholder="Sobrenome cadastrado" />
+      </label>
+    } @else {
+      <label class="field">
+        <span class="label">E-mail</span>
+        <input type="email" class="input" [(ngModel)]="emailConfirm" name="emailConfirm" placeholder="E-mail cadastrado" />
+      </label>
+    }
+    @if (mismatchError) {
+      <p class="error-msg">{{ hasName ? 'Nome e sobrenome não conferem. Digite exatamente como na lista.' : 'E-mail não confere.' }}</p>
+    }
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-cancel" (click)="cancel()">Cancelar</button>
+      <button type="submit" class="btn btn-confirm" [disabled]="!canConfirm">Excluir</button>
+    </div>
+  </form>
+</div>
