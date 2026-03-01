@@ -1,0 +1,78 @@
+.construcao-dialog {
+  box-sizing: border-box;
+  width: 634px;
+  height: 340px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(180deg, #83e3ea 0%, #00a8b2 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.construcao-icon {
+  display: block;
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 1rem;
+  object-fit: contain;
+}
+
+.construcao-title {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #EDE241;
+}
+
+.construcao-text {
+  margin: 0 0 1.25rem;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.4;
+  color: #fff;
+  max-width: 85%;
+}
+
+.btn-ok {
+  width: 250px;
+  height: 57px;
+  padding: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+  background: transparent;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.btn-ok:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Celular / tela pequena: modal ocupa quase toda a largura e altura proporcional */
+@media (max-width: 680px) {
+  .construcao-dialog {
+    width: calc(100vw - 2rem);
+    max-width: 634px;
+    height: auto;
+    min-height: 260px;
+    max-height: calc(100vh - 2rem);
+    padding: 1.25rem;
+  }
+
+  .construcao-title {
+    font-size: 1.1rem;
+  }
+
+  .btn-ok {
+    width: 100%;
+    max-width: 250px;
+  }
+}
