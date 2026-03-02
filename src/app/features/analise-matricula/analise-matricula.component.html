@@ -1,0 +1,139 @@
+<div class="analise-page">
+  <app-header></app-header>
+
+  <div class="analise-content">
+    @if (analyzing()) {
+      <app-analise-loading message="Analisando matrícula"></app-analise-loading>
+    } @else {
+      <div class="analise-upload">
+        <a routerLink="/" class="logo-link" aria-label="Conta Leilão - início">
+          <img src="/assets/images/logo-contaleilao.svg" alt="Conta Leilão" class="logo" />
+        </a>
+        <p class="app-name">ContaLeilão</p>
+        <h1 class="pergunta">O que deseja analisar?</h1>
+
+        @if (result(); as res) {
+          <div class="result-box result-success result-with-report" role="status">
+            <p class="result-title">Análise concluída</p>
+            <p class="result-detail">Confiança do relatório: {{ res.confidence }}%</p>
+
+            @if (report(); as rpt) {
+              <div class="report-body">
+                @if (rpt.resumo_executivo) {
+                  <section class="report-section">
+                    <h2 class="report-section-title">Resumo executivo</h2>
+                    <p class="report-resumo">{{ rpt.resumo_executivo }}</p>
+                  </section>
+                }
+                @if (rpt.linha_do_tempo?.length) {
+                  <section class="report-section">
+                    <h2 class="report-section-title">Linha do tempo</h2>
+                    <ul class="report-list">
+                      @for (item of rpt.linha_do_tempo; track $index) {
+                        <li class="report-timeline-item">
+                          <span class="report-timeline-meta">
+                            {{ item.data ?? 'Data não informada' }}
+                            @if (item.tipo) { · {{ item.tipo }} }
+                            <span class="impacto impacto-{{ item.impacto_no_arremate ?? 'medio' }}">{{ item.impacto_no_arremate ?? '—' }}</span>
+                          </span>
+                          <span class="report-timeline-desc">{{ item.descricao_curta ?? '' }}</span>
+                        </li>
+                      }
+                    </ul>
+                  </section>
+                }
+                @if (rpt.onus_e_gravames?.length) {
+                  <section class="report-section">
+                    <h2 class="report-section-title">Ônus e gravames</h2>
+                    <ul class="report-list">
+                      @for (item of rpt.onus_e_gravames; track $index) {
+                        <li class="report-onus-item">
+                          <strong>{{ item.tipo }}</strong> — {{ item.status }}
+                          @if (item.impacto_no_arremate) { <span class="impacto impacto-{{ item.impacto_no_arremate }}">{{ item.impacto_no_arremate }}</span> }
+                          @if (item.detalhes) { <p class="report-onus-detalhes">{{ item.detalhes }}</p> }
+                        </li>
+                      }
+                    </ul>
+                  </section>
+                }
+                @if (rpt.pontos_de_atencao_para_arremate?.length) {
+                  <section class="report-section">
+                    <h2 class="report-section-title">Pontos de atenção para arremate</h2>
+                    <ul class="report-list report-pontos">
+                      @for (item of rpt.pontos_de_atencao_para_arremate; track $index) {
+                        <li>
+                          <span class="prioridade prioridade-{{ item.prioridade ?? 'media' }}">{{ item.prioridade ?? '—' }}</span>
+                          {{ item.descricao ?? '' }}
+                        </li>
+                      }
+                    </ul>
+                  </section>
+                }
+                @if (rpt.itens_a_confirmar_no_cartorio?.length) {
+                  <section class="report-section">
+                    <h2 class="report-section-title">Itens a confirmar no cartório</h2>
+                    <ul class="report-list">
+                      @for (item of rpt.itens_a_confirmar_no_cartorio; track $index) {
+                        <li>{{ item }}</li>
+                      }
+                    </ul>
+                  </section>
+                }
+              </div>
+            }
+
+            <button type="button" class="btn-analisar" (click)="clearFile()">Analisar outro PDF</button>
+          </div>
+        } @else if (errorMessage(); as err) {
+          <div class="result-box result-error" role="alert">
+            <p class="result-title">Erro</p>
+            <p class="result-detail">{{ err }}</p>
+            <button type="button" class="btn-analisar" (click)="clearFile()">Tentar novamente</button>
+          </div>
+        }
+
+        @if (!result() && !errorMessage()) {
+          <img
+            src="/assets/images/macote-search.svg"
+            alt=""
+            class="mascote"
+            width="280"
+            height="280"
+            aria-hidden="true"
+          />
+          <div class="upload-row">
+            <button
+              type="button"
+              class="btn-add"
+              (click)="openFileDialog()"
+              aria-label="Selecionar arquivo PDF"
+            >
+              <span class="icon-plus" aria-hidden="true">+</span>
+            </button>
+            <input
+              #fileInput
+              type="file"
+              accept=".pdf,application/pdf"
+              class="input-file-hidden"
+              (change)="onFileChange($event)"
+              aria-label="Arquivo PDF"
+            />
+            <input
+              type="text"
+              class="input-display"
+              [value]="selectedFileName()"
+              readonly
+              placeholder="Selecione um PDF de matrícula"
+              (click)="openFileDialog()"
+            />
+          </div>
+          @if (selectedFile()) {
+            <button type="button" class="btn-analisar" (click)="startAnalysis()">
+              Analisar matrícula
+            </button>
+          }
+        }
+      </div>
+    }
+  </div>
+</div>

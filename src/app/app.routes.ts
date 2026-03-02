@@ -15,6 +15,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'analise-matricula',
+    loadComponent: () => import('./features/analise-matricula/analise-matricula.component').then(m => m.AnaliseMatriculaComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'forma-pagamento',
     loadComponent: () => import('./features/journey/forma-pagamento/forma-pagamento.component').then(m => m.FormaPagamentoComponent),
     canActivate: [authGuard, journeyGuard],

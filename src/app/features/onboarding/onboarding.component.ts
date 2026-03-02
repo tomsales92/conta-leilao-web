@@ -1,12 +1,10 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Dialog } from '@angular/cdk/dialog';
 import { AuthService } from '../../core/services/auth.service';
 import { JourneyStateService } from '../../core/services/journey-state.service';
 import { AdminService, type Profile } from '../../core/services/admin.service';
 import { HeaderComponent } from '../../shared/components/header/header.component';
-import { ConstrucaoDialogComponent } from '../../shared/components/construcao-dialog/construcao-dialog.component';
 
 @Component({
   selector: 'app-onboarding',
@@ -21,8 +19,6 @@ export class OnboardingComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly admin = inject(AdminService);
   private readonly fb = inject(FormBuilder);
-  private readonly dialog = inject(Dialog);
-
   protected readonly profile = signal<Profile | null>(null);
   protected readonly loadingProfile = signal(true);
   protected readonly savingProfile = signal(false);
@@ -105,10 +101,8 @@ export class OnboardingComponent implements OnInit {
     this.router.navigate(['/forma-pagamento']);
   }
 
-  openConstrucaoModal(): void {
-    this.dialog.open(ConstrucaoDialogComponent, {
-      panelClass: 'app-construcao-dialog-panel',
-    });
+  goToAnaliseMatricula(): void {
+    this.router.navigate(['/analise-matricula']);
   }
 
   protected get firstName(): string {
