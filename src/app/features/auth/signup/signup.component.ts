@@ -49,13 +49,7 @@ export class SignupComponent {
         password: this.form.controls.password.value,
       };
       await this.auth.signUpWithProfile(data);
-      this.success = true;
-      const user = this.auth.currentUser();
-      if (user && !user.identities?.length) {
-        this.success = true;
-      } else {
-        this.router.navigate(['/onboarding']);
-      }
+      this.router.navigate(['/onboarding']);
     } catch (e: unknown) {
       this.error = e instanceof Error ? e.message : 'Erro ao criar conta. Tente novamente.';
     } finally {

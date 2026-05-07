@@ -1,22 +1,22 @@
-import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
-import { SupabaseService } from './supabase.service';
-
-const BUCKET = 'matriculas';
-const ANALYZE_FN_URL = `${environment.supabaseUrl}/functions/v1/analyze-matricula`;
+import { Injectable, inject } from '@angular/core';
+import { ApiService } from './api.service';
 
 export interface AnalyzeResult {
   job_id: string;
-  status: 'done';
+  status: string;
   confidence: number;
 }
 
-export interface AnalyzeError {
-  error: string;
-  job_id?: string;
+export interface MatriculaFactsJson {
+  identificacao?: {
+    municipio_uf?: string | null;
+    numero_matricula?: string | null;
+    endereco?: string | null;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
 }
 
-/** Estrutura do relatório exibido na tela (report_json da Edge Function). */
 export interface MatriculaReportJson {
   resumo_executivo?: string;
   linha_do_tempo?: Array<{
@@ -42,110 +42,61 @@ export interface MatriculaReportJson {
 
 @Injectable({ providedIn: 'root' })
 export class MatriculaAnalysisService {
-  constructor(private readonly supabase: SupabaseService) {}
+  private readonly api = inject(ApiService);
 
-  /**
-   * Faz upload do PDF para o bucket matriculas (path: userId/nome-do-arquivo)
-   * e chama a Edge Function analyze-matricula.
-   * Requer usuário logado.
-   */
-  async uploadAndAnalyze(file: File, userId: string): Promise<AnalyzeResult> {
-    const path = `${userId}/${file.name}`;
+  async uploadAndAnalyze(file: File): Promise<AnalyzeResult> {
+    const uploaded = await this.api.uploadFile<{ path: string }>('storage/matriculas', file);
 
-    const { data: uploadData, error: uploadError } = await this.supabase.client.storage
-      .from(BUCKET)
-      .upload(path, file, { contentType: 'application/pdf', upsert: true });
-
-    if (uploadError) {
-      throw new Error('Falha no upload: ' + (uploadError.message ?? 'tente novamente'));
-    }
-    if (!uploadData?.path) {
-      throw new Error('Upload não retornou o caminho do arquivo');
-    }
-
-    // Força renovação da sessão para evitar envio de JWT inválido/expirado.
-    const { data: refreshed } = await this.supabase.client.auth.refreshSession();
-    let accessToken = refreshed?.session?.access_token;
-    if (!accessToken) {
-      const { data: sessionData } = await this.supabase.client.auth.getSession();
-      accessToken = sessionData?.session?.access_token;
-    }
-    if (!accessToken) {
-      throw new Error('Sessão expirada. Faça login novamente.');
-    }
-    if (accessToken.split('.').length !== 3) {
-      throw new Error('Sessão inválida. Faça login novamente.');
-    }
-    const { error: userError } = await this.supabase.client.auth.getUser(accessToken);
-    if (userError) {
-      await this.supabase.client.auth.signOut({ scope: 'local' });
-      throw new Error(`Sessão inválida no Supabase (${userError.message}). Faça login novamente.`);
-    }
-
-    const res = await fetch(ANALYZE_FN_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        apikey: environment.supabaseAnonKey,
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({ storage_path: uploadData.path }),
+    const job = await this.api.post<{ jobId: string; status: string }>('analyze-matricula', {
+      storagePath: uploaded.path,
     });
 
-    const result = (await res.json().catch(() => null)) as AnalyzeResult | AnalyzeError | { message?: string } | null;
-    if (!res.ok) {
-      const msg =
-        (result && typeof result === 'object' && 'error' in result && typeof result.error === 'string' && result.error) ||
-        (result && typeof result === 'object' && 'message' in result && typeof result.message === 'string' && result.message) ||
-        'Erro ao analisar matrícula';
-      if (res.status === 401 || String(msg).toLowerCase().includes('jwt') || String(msg).toLowerCase().includes('unauthorized')) {
-        throw new Error(`Sessão expirada ou inválida (${msg}). Faça login novamente.`);
+    return { job_id: job.jobId, status: job.status, confidence: 0 };
+  }
+
+  async pollUntilDone(jobId: string, maxWaitMs = 120_000): Promise<AnalyzeResult> {
+    const interval = 3_000;
+    const deadline = Date.now() + maxWaitMs;
+
+    while (Date.now() < deadline) {
+      const job = await this.api.get<{ status: string; error: string | null; confidence: number | null }>(
+        `analyze-matricula/${jobId}/status`
+      );
+
+      if (job.status === 'Done') {
+        return { job_id: jobId, status: job.status, confidence: job.confidence ?? 0 };
       }
-      throw new Error(msg);
+      if (job.status === 'Error') {
+        throw new Error(job.error ?? 'Erro ao analisar matrícula.');
+      }
+
+      await delay(interval);
     }
-    if (!result) {
-      throw new Error('Resposta inválida da função');
-    }
-    if ('error' in result && result.error) {
-      const msg = result.job_id ? `${result.error} (job: ${result.job_id})` : result.error;
-      throw new Error(msg);
-    }
-    return result as AnalyzeResult;
+
+    throw new Error('Tempo limite de análise excedido. Tente novamente.');
   }
 
-  /**
-   * Busca o status do job (para polling, se no futuro a função retornar job_id antes de concluir).
-   */
-  async getJob(jobId: string): Promise<{ status: string; error: string | null } | null> {
-    const { data, error } = await this.supabase.client
-      .from('matricula_jobs')
-      .select('status, error')
-      .eq('id', jobId)
-      .single();
-
-    if (error || !data) return null;
-    return { status: data.status, error: data.error };
-  }
-
-  /**
-   * Busca o relatório quando o job está com status 'done'.
-   */
   async getReport(jobId: string): Promise<{
-    facts_json: unknown;
+    facts_json: MatriculaFactsJson;
     report_json: MatriculaReportJson;
     confidence: number;
   } | null> {
-    const { data, error } = await this.supabase.client
-      .from('matricula_reports')
-      .select('facts_json, report_json, confidence')
-      .eq('job_id', jobId)
-      .single();
+    try {
+      const data = await this.api.get<{
+        factsJson: MatriculaFactsJson;
+        reportJson: MatriculaReportJson;
+        confidence: number;
+      }>(`matricula-reports/${jobId}`);
 
-    if (error || !data) return null;
-    return {
-      facts_json: data.facts_json,
-      report_json: (data.report_json ?? {}) as MatriculaReportJson,
-      confidence: data.confidence ?? 0,
-    };
+      return {
+        facts_json:  data.factsJson  ?? {},
+        report_json: data.reportJson ?? {},
+        confidence:  data.confidence ?? 0,
+      };
+    } catch {
+      return null;
+    }
   }
 }
+
+const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));

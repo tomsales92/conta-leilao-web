@@ -88,7 +88,7 @@ export class AdminComponent implements OnInit {
   private getCreateUserErrorMessage(e: unknown): string {
     const msg = e instanceof Error ? e.message : String(e ?? '');
     if (/email.*invalid|invalid.*email|is invalid/i.test(msg)) {
-      return 'O e-mail foi rejeitado pelo Supabase. Tente outro endereço (ex.: Gmail) ou verifique em Supabase → Authentication → Providers/Email se o domínio está permitido.';
+      return 'O e-mail informado é inválido. Verifique o endereço e tente novamente.';
     }
     if (/already registered|already exists|already been registered/i.test(msg)) {
       return 'Este e-mail já está cadastrado. Use outro ou edite o usuário existente na lista.';

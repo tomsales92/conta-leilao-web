@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DialogRef } from '@angular/cdk/dialog';
 import { DIALOG_DATA } from '@angular/cdk/dialog';
-import type { Profile, ProfileInsert, ProfileUpdate, ProfileInsertWithPassword, Plan, ProfileRole } from '../../../core/services/admin.service';
+import type { Profile, ProfileUpdate, ProfileInsertWithPassword, Plan, ProfileRole } from '../../../core/services/admin.service';
 
 export interface ProfileFormDialogData {
   profile: Profile | null;
@@ -21,9 +21,9 @@ export class ProfileFormDialogComponent {
 
   email = this.data.profile?.email ?? '';
   password = '';
-  firstName = this.data.profile?.first_name ?? '';
-  lastName = this.data.profile?.last_name ?? '';
-  dateOfBirth = this.data.profile?.date_of_birth ?? '';
+  firstName = this.data.profile?.firstName ?? '';
+  lastName = this.data.profile?.lastName ?? '';
+  dateOfBirth = this.data.profile?.dateOfBirth ?? '';
   gender = this.data.profile?.gender ?? '';
   plan: Plan = (this.data.profile?.plan as Plan) ?? 'free';
   role: ProfileRole = (this.data.profile?.role as ProfileRole) ?? 'user';
@@ -36,19 +36,19 @@ export class ProfileFormDialogComponent {
   }
 
   save(): void {
-    const base = {
+    const base: ProfileUpdate = {
       email: this.email || null,
-      first_name: this.firstName || null,
-      last_name: this.lastName || null,
-      date_of_birth: this.dateOfBirth || null,
+      firstName: this.firstName || null,
+      lastName: this.lastName || null,
+      dateOfBirth: this.dateOfBirth || null,
       gender: this.gender || null,
       plan: this.plan,
       role: this.role,
     };
     if (this.isEdit) {
-      this.dialogRef.close(base as ProfileUpdate);
+      this.dialogRef.close(base);
     } else {
-      this.dialogRef.close({ ...base, password: this.password } as ProfileInsertWithPassword);
+      this.dialogRef.close({ ...base, id: '', password: this.password } as ProfileInsertWithPassword);
     }
   }
 

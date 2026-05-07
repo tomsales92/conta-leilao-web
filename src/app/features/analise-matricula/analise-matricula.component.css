@@ -14,6 +14,191 @@
   padding: 1.5rem 1rem 2rem;
 }
 
+/* Durante o loading: animação + progress stepper */
+.analise-loading-wrap {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.current-step {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #fff;
+  text-align: center;
+}
+
+.progress-stepper {
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.progress-stepper .step {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.progress-stepper .step.done {
+  color: #fff;
+}
+
+.progress-stepper .step.running {
+  color: #fff;
+  font-weight: 500;
+}
+
+.progress-stepper .step.error {
+  color: #ffcccc;
+}
+
+.step-icon {
+  flex-shrink: 0;
+  width: 1.25rem;
+  text-align: center;
+}
+
+.step-label {
+  flex: 1;
+}
+
+.step-detail {
+  font-size: 0.85rem;
+  opacity: 0.95;
+}
+
+/* Resultado unificado */
+.result-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.result-error-msg {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  color: #8b2a2a;
+}
+
+.confidence {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  color: #004d52;
+}
+
+.report-section h3,
+.report-section h4 {
+  margin: 0.75rem 0 0.35rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #004d52;
+}
+
+.iptu-status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+.iptu-status-badge.success {
+  background: rgba(0, 160, 80, 0.2);
+  color: #006030;
+}
+
+.iptu-status-badge.assisted {
+  background: rgba(200, 140, 0, 0.25);
+  color: #6b4a00;
+}
+
+.iptu-status-badge.unavailable {
+  background: rgba(0, 106, 112, 0.2);
+  color: #004d52;
+}
+
+.iptu-debitos {
+  margin: 0.35rem 0 0 1rem;
+  padding: 0;
+  font-size: 0.9rem;
+}
+
+.iptu-total {
+  margin: 0.5rem 0 0;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.assisted-evidence {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(0, 106, 112, 0.08);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 168, 178, 0.3);
+}
+
+.assisted-evidence-titulo {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #004d52;
+}
+
+.assisted-textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid rgba(0, 168, 178, 0.35);
+  border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+}
+
+.assisted-anexo {
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.assisted-anexo input[type="file"] {
+  margin-top: 0.25rem;
+}
+
+.btn-register-evidence {
+  padding: 0.5rem 1rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #00a8b2;
+  background: #fff;
+  border: 1px solid #00a8b2;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-register-evidence:hover {
+  background: rgba(0, 168, 178, 0.1);
+}
+
+.evidence-saved {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: #006030;
+  font-weight: 500;
+}
+
 .analise-upload {
   width: 100%;
   max-width: 420px;
@@ -308,6 +493,450 @@
 
 .report-pontos li {
   margin-bottom: 0.5rem;
+}
+
+/* Seção IPTU (dados da matrícula) */
+.iptu-section {
+  border-top: 1px solid rgba(0, 106, 112, 0.2);
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+}
+
+/* IPTU Assistido — UI guiada por passos */
+.iptu-assisted {
+  margin-top: 0.5rem;
+}
+
+.iptu-assisted-header {
+  margin-bottom: 1.25rem;
+}
+
+.iptu-assisted-title {
+  margin: 0 0 0.35rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #004d52;
+}
+
+.iptu-assisted-subtext {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: #006a70;
+  line-height: 1.4;
+}
+
+.iptu-step {
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  background: rgba(0, 106, 112, 0.06);
+  border-radius: 10px;
+  border: 1px solid rgba(0, 168, 178, 0.25);
+}
+
+.iptu-step-title {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #004d52;
+}
+
+.btn-cta-primary {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: #00a8b2;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 168, 178, 0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-cta-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 168, 178, 0.45);
+}
+
+.iptu-fallback {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  color: #006a70;
+}
+
+.btn-copy-search {
+  padding: 0.5rem 1rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #00a8b2;
+  background: #fff;
+  border: 1px solid #00a8b2;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-copy-search:hover {
+  background: rgba(0, 168, 178, 0.08);
+}
+
+.iptu-data-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.iptu-data-block {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 168, 178, 0.2);
+}
+
+.iptu-data-label {
+  flex: 0 0 140px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #004d52;
+}
+
+.iptu-data-value {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.9rem;
+  color: #006a70;
+}
+
+.iptu-data-value.missing {
+  color: #888;
+  font-style: italic;
+}
+
+.btn-copy {
+  flex-shrink: 0;
+  padding: 0.3rem 0.6rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #00a8b2;
+  background: transparent;
+  border: 1px solid #00a8b2;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-copy:hover {
+  background: rgba(0, 168, 178, 0.1);
+}
+
+.assisted-anexo-name {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  color: #006a70;
+}
+
+.assisted-error {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: #8b2a2a;
+}
+
+.evidence-preview {
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(0, 160, 80, 0.08);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 160, 80, 0.25);
+}
+
+.preview-texto,
+.preview-anexo {
+  margin: 0 0 0.25rem;
+  font-size: 0.9rem;
+  color: #006030;
+}
+
+.preview-texto:last-child,
+.preview-anexo:last-child {
+  margin-bottom: 0;
+}
+
+.btn-register-evidence:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Chat com a matrícula */
+.chat-cta {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 106, 112, 0.2);
+}
+
+.btn-chat-cta {
+  padding: 0.6rem 1.25rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #00a8b2;
+  background: rgba(0, 168, 178, 0.12);
+  border: 1px solid #00a8b2;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-chat-cta:hover {
+  background: rgba(0, 168, 178, 0.2);
+}
+
+.chat-section {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 106, 112, 0.2);
+}
+
+.chat-unavailable {
+  margin-top: 1.25rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 10px;
+  background: rgba(255, 189, 89, 0.2);
+  border: 1px solid rgba(180, 120, 0, 0.25);
+  color: #6b4a00;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.chat-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(0, 106, 112, 0.06);
+  border-radius: 10px;
+  border: 1px solid rgba(0, 168, 178, 0.25);
+}
+
+.chat-messages {
+  max-height: 320px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.chat-bubble {
+  max-width: 90%;
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.chat-bubble.user {
+  align-self: flex-end;
+  background: #00a8b2;
+  color: #fff;
+}
+
+.chat-bubble.assistant {
+  align-self: flex-start;
+  background: #fff;
+  color: #004d52;
+  border: 1px solid rgba(0, 168, 178, 0.3);
+}
+
+.chat-bubble-content {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.chat-citations {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(0, 106, 112, 0.2);
+  font-size: 0.85rem;
+  color: #006a70;
+}
+
+.citation-item {
+  margin-bottom: 0.35rem;
+}
+
+.citation-field {
+  font-weight: 600;
+}
+
+.chat-loading .chat-loading-dots {
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.chat-error {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #8b2a2a;
+}
+
+.chat-quick-questions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip-question {
+  padding: 0.35rem 0.75rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.8rem;
+  color: #006a70;
+  background: #fff;
+  border: 1px solid rgba(0, 168, 178, 0.4);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.chip-question:hover {
+  background: rgba(0, 168, 178, 0.08);
+  border-color: #00a8b2;
+}
+
+.chip-suggested {
+  border-color: rgba(200, 140, 0, 0.5);
+  color: #6b4a00;
+}
+
+.chip-suggested:hover {
+  background: rgba(200, 140, 0, 0.1);
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.chat-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.6rem 1rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  border: 1px solid rgba(0, 168, 178, 0.35);
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.chat-input:focus {
+  outline: none;
+  border-color: #00a8b2;
+  box-shadow: 0 0 0 2px rgba(0, 168, 178, 0.2);
+}
+
+.btn-chat-send {
+  padding: 0.6rem 1.25rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  background: #00a8b2;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.btn-chat-send:hover:not(:disabled) {
+  background: #009199;
+}
+
+.btn-chat-send:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.iptu-dados-matricula {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  color: #004d52;
+}
+
+.iptu-loading {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #006a70;
+}
+
+.iptu-error {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #8b2a2a;
+}
+
+.btn-iptu-retry {
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #00a8b2;
+  background: transparent;
+  border: 1px solid #00a8b2;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.iptu-result {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.iptu-situacao {
+  margin: 0 0 0.35rem;
+}
+
+.iptu-link {
+  margin: 0.5rem 0;
+}
+
+.iptu-link .link-oficial {
+  color: #006a70;
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.iptu-instrucoes-titulo {
+  margin: 0.5rem 0 0.25rem;
+  font-weight: 600;
+}
+
+.iptu-instrucoes {
+  margin: 0 0 0 1rem;
+  padding: 0;
+}
+
+.iptu-instrucoes li {
+  margin-bottom: 0.2rem;
+}
+
+.iptu-campos {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: #004d52;
+}
+
+.iptu-sem-dados {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #006a70;
+  font-style: italic;
 }
 
 @media (max-width: 480px) {

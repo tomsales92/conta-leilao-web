@@ -30,7 +30,7 @@ export const adminGuard: CanActivateFn = async () => {
     }
     console.warn('[adminGuard] Acesso negado: perfil sem role admin.', { profileRole: role, userId: user.id });
   } catch (e) {
-    console.error('[adminGuard] Erro ao buscar perfil (RLS ou colunas plan/role no Supabase).', e);
+    console.error('[adminGuard] Erro ao buscar perfil.', e);
   }
   return router.createUrlTree(['/admin-negado']);
 };

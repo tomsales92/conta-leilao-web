@@ -3,7 +3,26 @@
 
   <div class="analise-content">
     @if (analyzing()) {
-      <app-analise-loading message="Analisando matrícula"></app-analise-loading>
+      <div class="analise-loading-wrap">
+        <app-analise-loading message="Analisando documento"></app-analise-loading>
+        <p class="current-step" [attr.aria-live]="'polite'">{{ currentStepLabel() }}</p>
+        <ul class="progress-stepper" role="list">
+          @for (step of steps(); track step.id) {
+            <li class="step" [class.done]="step.status === 'done'" [class.running]="step.status === 'running'" [class.error]="step.status === 'error'">
+              <span class="step-icon">
+                @if (step.status === 'done') { ✓ }
+                @else if (step.status === 'running') { … }
+                @else if (step.status === 'error') { ! }
+                @else { ○ }
+              </span>
+              <span class="step-label">{{ step.label }}</span>
+              @if (step.detail) {
+                <span class="step-detail">{{ step.detail }}</span>
+              }
+            </li>
+          }
+        </ul>
+      </div>
     } @else {
       <div class="analise-upload">
         <a routerLink="/" class="logo-link" aria-label="Conta Leilão - início">
@@ -12,77 +31,238 @@
         <p class="app-name">ContaLeilão</p>
         <h1 class="pergunta">O que deseja analisar?</h1>
 
-        @if (result(); as res) {
+        @if (unifiedReport(); as report) {
           <div class="result-box result-success result-with-report" role="status">
-            <p class="result-title">Análise concluída</p>
-            <p class="result-detail">Confiança do relatório: {{ res.confidence }}%</p>
+            <h2 class="result-title">Resultado da Análise</h2>
 
-            @if (report(); as rpt) {
-              <div class="report-body">
-                @if (rpt.resumo_executivo) {
-                  <section class="report-section">
-                    <h2 class="report-section-title">Resumo executivo</h2>
+            @if (report.error) {
+              <p class="result-error-msg">{{ report.error }}</p>
+            }
+
+            <!-- 1) Dados extraídos do documento -->
+            <section class="report-section">
+              <h3 class="report-section-title">Dados extraídos do documento</h3>
+              <p class="confidence">Confiança do relatório: {{ report.confidence }}%</p>
+              @if (report.report; as rpt) {
+                <div class="report-body">
+                  @if (rpt.resumo_executivo) {
                     <p class="report-resumo">{{ rpt.resumo_executivo }}</p>
-                  </section>
-                }
-                @if (rpt.linha_do_tempo?.length) {
-                  <section class="report-section">
-                    <h2 class="report-section-title">Linha do tempo</h2>
+                  }
+                  @if (rpt.linha_do_tempo?.length) {
+                    <h4>Linha do tempo</h4>
                     <ul class="report-list">
                       @for (item of rpt.linha_do_tempo; track $index) {
                         <li class="report-timeline-item">
-                          <span class="report-timeline-meta">
-                            {{ item.data ?? 'Data não informada' }}
-                            @if (item.tipo) { · {{ item.tipo }} }
-                            <span class="impacto impacto-{{ item.impacto_no_arremate ?? 'medio' }}">{{ item.impacto_no_arremate ?? '—' }}</span>
-                          </span>
+                          <span class="report-timeline-meta">{{ item.data ?? '—' }} · {{ item.tipo ?? '' }} <span class="impacto impacto-{{ item.impacto_no_arremate ?? 'medio' }}">{{ item.impacto_no_arremate ?? '—' }}</span></span>
                           <span class="report-timeline-desc">{{ item.descricao_curta ?? '' }}</span>
                         </li>
                       }
                     </ul>
-                  </section>
-                }
-                @if (rpt.onus_e_gravames?.length) {
-                  <section class="report-section">
-                    <h2 class="report-section-title">Ônus e gravames</h2>
+                  }
+                  @if (rpt.onus_e_gravames?.length) {
+                    <h4>Ônus e gravames</h4>
                     <ul class="report-list">
                       @for (item of rpt.onus_e_gravames; track $index) {
-                        <li class="report-onus-item">
-                          <strong>{{ item.tipo }}</strong> — {{ item.status }}
-                          @if (item.impacto_no_arremate) { <span class="impacto impacto-{{ item.impacto_no_arremate }}">{{ item.impacto_no_arremate }}</span> }
-                          @if (item.detalhes) { <p class="report-onus-detalhes">{{ item.detalhes }}</p> }
-                        </li>
+                        <li><strong>{{ item.tipo }}</strong> — {{ item.status }} @if (item.impacto_no_arremate) { <span class="impacto impacto-{{ item.impacto_no_arremate }}">{{ item.impacto_no_arremate }}</span> }</li>
                       }
                     </ul>
-                  </section>
-                }
-                @if (rpt.pontos_de_atencao_para_arremate?.length) {
-                  <section class="report-section">
-                    <h2 class="report-section-title">Pontos de atenção para arremate</h2>
+                  }
+                  @if (rpt.pontos_de_atencao_para_arremate?.length) {
+                    <h4>Pontos de atenção para arremate</h4>
                     <ul class="report-list report-pontos">
                       @for (item of rpt.pontos_de_atencao_para_arremate; track $index) {
-                        <li>
-                          <span class="prioridade prioridade-{{ item.prioridade ?? 'media' }}">{{ item.prioridade ?? '—' }}</span>
-                          {{ item.descricao ?? '' }}
-                        </li>
+                        <li><span class="prioridade prioridade-{{ item.prioridade ?? 'media' }}">{{ item.prioridade }}</span> {{ item.descricao ?? '' }}</li>
                       }
                     </ul>
-                  </section>
-                }
-                @if (rpt.itens_a_confirmar_no_cartorio?.length) {
-                  <section class="report-section">
-                    <h2 class="report-section-title">Itens a confirmar no cartório</h2>
+                  }
+                  @if (rpt.itens_a_confirmar_no_cartorio?.length) {
+                    <h4>Itens a confirmar no cartório</h4>
                     <ul class="report-list">
                       @for (item of rpt.itens_a_confirmar_no_cartorio; track $index) {
                         <li>{{ item }}</li>
                       }
                     </ul>
-                  </section>
+                  }
+                </div>
+              }
+            </section>
+
+            <!-- 2) Status IPTU -->
+            <section #iptuSection id="iptu-section" class="report-section iptu-section">
+              <h3 class="report-section-title">Status IPTU</h3>
+              @if (report.iptuStatus === 'success' && report.iptuResult) {
+                <p class="iptu-status-badge success">Encontrado com sucesso</p>
+                <p class="iptu-situacao">Situação: {{ report.iptuResult.situacao }}</p>
+                @if (report.iptuResult.debitos && report.iptuResult.debitos.length) {
+                  <ul class="iptu-debitos">
+                    @for (d of report.iptuResult.debitos; track $index) {
+                      <li>{{ d.exercicio }} — R$ {{ d.valor }} — {{ d.status }} @if (d.vencimento) { (venc. {{ d.vencimento }}) }</li>
+                    }
+                  </ul>
+                  @if (report.iptuResult.total_aberto != null) {
+                    <p class="iptu-total">Total em aberto: R$ {{ report.iptuResult.total_aberto }}</p>
+                  }
                 }
+              } @else if (report.iptuStatus === 'assisted') {
+                <!-- IPTU Assistido: UI guiada por passos -->
+                <div class="iptu-assisted">
+                  <div class="iptu-assisted-header">
+                    <h4 class="iptu-assisted-title">Consulta de IPTU</h4>
+                    <span class="iptu-status-badge assisted">Assistida</span>
+                    <p class="iptu-assisted-subtext">Consulta automática não disponível para este município. Faça a consulta no portal e registre o resultado (opcional).</p>
+                  </div>
+
+                  <!-- Passo 1: Abrir portal -->
+                  <div class="iptu-step">
+                    <h5 class="iptu-step-title">Passo 1: Abrir portal da prefeitura</h5>
+                    @if (getPortalUrl()) {
+                      <button type="button" class="btn-cta-primary" (click)="openPortal()">Abrir consulta de IPTU</button>
+                    } @else {
+                      <p class="iptu-fallback">Link indisponível. Use o Google: "IPTU 2ª via + {{ report.iptuPrefilled?.municipio ?? 'município' }}/{{ report.iptuPrefilled?.uf ?? 'UF' }}"</p>
+                      <button type="button" class="btn-copy-search" (click)="copyGoogleSearch()">
+                        {{ copyFeedback() === 'Busca copiada' ? '✓ Copiado' : 'Copiar busca' }}
+                      </button>
+                    }
+                  </div>
+
+                  <!-- Passo 2: Dados para copiar -->
+                  @if (report.iptuPrefilled) {
+                    <div class="iptu-step">
+                      <h5 class="iptu-step-title">Passo 2: Use estes dados no portal</h5>
+                      <div class="iptu-data-blocks">
+                        <div class="iptu-data-block">
+                          <span class="iptu-data-label">UF</span>
+                          <span class="iptu-data-value" [class.missing]="!report.iptuPrefilled.uf">{{ report.iptuPrefilled.uf || 'Não identificado no documento' }}</span>
+                          @if (report.iptuPrefilled.uf) {
+                            <button type="button" class="btn-copy" (click)="copyToClipboard(report.iptuPrefilled!.uf, 'UF')">{{ copyFeedback() === 'UF' ? '✓' : 'Copiar' }}</button>
+                          }
+                        </div>
+                        <div class="iptu-data-block">
+                          <span class="iptu-data-label">Município</span>
+                          <span class="iptu-data-value" [class.missing]="!report.iptuPrefilled.municipio">{{ report.iptuPrefilled.municipio || 'Não identificado no documento' }}</span>
+                          @if (report.iptuPrefilled.municipio) {
+                            <button type="button" class="btn-copy" (click)="copyToClipboard(report.iptuPrefilled!.municipio, 'Município')">{{ copyFeedback() === 'Município' ? '✓' : 'Copiar' }}</button>
+                          }
+                        </div>
+                        <div class="iptu-data-block">
+                          <span class="iptu-data-label">Inscrição imobiliária</span>
+                          <span class="iptu-data-value" [class.missing]="!report.iptuPrefilled.inscricao">{{ report.iptuPrefilled.inscricao || 'Não identificado no documento' }}</span>
+                          @if (report.iptuPrefilled.inscricao) {
+                            <button type="button" class="btn-copy" (click)="copyToClipboard(report.iptuPrefilled!.inscricao!, 'Inscrição')">{{ copyFeedback() === 'Inscrição' ? '✓' : 'Copiar' }}</button>
+                          }
+                        </div>
+                        <div class="iptu-data-block">
+                          <span class="iptu-data-label">Exercício</span>
+                          <span class="iptu-data-value" [class.missing]="!report.iptuPrefilled.exercicio">{{ report.iptuPrefilled.exercicio || 'Não identificado no documento' }}</span>
+                          @if (report.iptuPrefilled.exercicio) {
+                            <button type="button" class="btn-copy" (click)="copyToClipboard(report.iptuPrefilled!.exercicio!, 'Exercício')">{{ copyFeedback() === 'Exercício' ? '✓' : 'Copiar' }}</button>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  }
+
+                  <!-- Passo 3: Registrar evidência (opcional) -->
+                  <div class="iptu-step">
+                    <h5 class="iptu-step-title">Passo 3 (opcional): Registrar resultado no relatório</h5>
+                    @if (!assistedEvidenceSaved()) {
+                      <div class="assisted-evidence">
+                        <textarea [(ngModel)]="assistedTextoColado" name="assistedTexto" class="assisted-textarea" placeholder="Cole aqui o resultado da consulta ou um resumo..." rows="3"></textarea>
+                        <div class="assisted-anexo">
+                          <label>Anexar print ou PDF do resultado</label>
+                          <input type="file" accept=".pdf,image/*" (change)="onAssistedAnexoChange($event)" />
+                          @if (assistedAnexo) {
+                            <span class="assisted-anexo-name">{{ assistedAnexo.name }}</span>
+                          }
+                        </div>
+                        @if (assistedError()) {
+                          <p class="assisted-error">{{ assistedError() }}</p>
+                        }
+                        <button type="button" class="btn-register-evidence" [disabled]="!canRegisterEvidence() || assistedLoading()" (click)="submitAssistedEvidence()">
+                          {{ assistedLoading() ? 'Salvando…' : 'Registrar no relatório' }}
+                        </button>
+                      </div>
+                    } @else {
+                      <p class="evidence-saved">Evidência registrada</p>
+                      @if (assistedEvidencePreview(); as preview) {
+                        <div class="evidence-preview">
+                          @if (preview.texto) { <p class="preview-texto">{{ preview.texto }}</p> }
+                          @if (preview.anexo) { <p class="preview-anexo">Anexo: {{ preview.anexo }}</p> }
+                        </div>
+                      }
+                    }
+                  </div>
+                </div>
+              } @else if (report.iptuStatus === 'unavailable') {
+                <p class="iptu-status-badge unavailable">Município/UF não identificado no documento ou sem conector.</p>
+              }
+            </section>
+
+            <!-- 3) Chat com a matrícula -->
+            @if (report.analysisJobId) {
+              @if (!chatOpen()) {
+                <div class="chat-cta">
+                  <button type="button" class="btn-chat-cta" (click)="openChat()">Tirar dúvidas no chat</button>
+                </div>
+              } @else {
+                <section class="chat-section" id="chat-section">
+                  <h3 class="report-section-title">Perguntar sobre esta matrícula</h3>
+                  <div class="chat-panel">
+                    <div class="chat-messages">
+                      @for (msg of chatMessages(); track $index) {
+                        <div class="chat-bubble" [class.user]="msg.role === 'user'" [class.assistant]="msg.role === 'assistant'">
+                          <div class="chat-bubble-content">{{ msg.content }}</div>
+                          @if (msg.citations && msg.citations.length) {
+                            <div class="chat-citations">
+                              <strong>Evidências:</strong>
+                              @for (c of msg.citations; track c.field_name + c.source_snippet) {
+                                <div class="citation-item">
+                                  <span class="citation-field">{{ c.field_name }}</span> ({{ c.confidence }}%): <em>{{ c.source_snippet }}</em>
+                                </div>
+                              }
+                            </div>
+                          }
+                        </div>
+                      }
+                      @if (chatLoading()) {
+                        <div class="chat-bubble assistant chat-loading">
+                          <span class="chat-loading-dots">Pensando...</span>
+                        </div>
+                      }
+                    </div>
+                    @if (chatError()) {
+                      <p class="chat-error">{{ chatError() }}</p>
+                    }
+                    <div class="chat-quick-questions">
+                      @for (q of QUICK_QUESTIONS; track q) {
+                        <button type="button" class="chip-question" (click)="sendChatMessage(q)">{{ q }}</button>
+                      }
+                      @if (getSuggestedQuestion(); as sq) {
+                        <button type="button" class="chip-question chip-suggested" (click)="sendChatMessage(sq)">{{ sq }}</button>
+                      }
+                    </div>
+                    <form class="chat-input-row" (ngSubmit)="sendChatMessage()">
+                      <input
+                        type="text"
+                        class="chat-input"
+                        [(ngModel)]="chatInput"
+                        name="chatInput"
+                        placeholder="Digite sua pergunta..."
+                        maxlength="2000"
+                        [disabled]="chatLoading()"
+                      />
+                      <button type="submit" class="btn-chat-send" [disabled]="!chatInput.trim() || chatLoading()">Enviar</button>
+                    </form>
+                  </div>
+                </section>
+              }
+            } @else {
+              <div class="chat-unavailable" role="note">
+                Chat indisponível para esta análise. O `analysis_job` não foi criado no banco.
               </div>
             }
 
-            <button type="button" class="btn-analisar" (click)="clearFile()">Analisar outro PDF</button>
+            <button type="button" class="btn-analisar" (click)="clearFile()">Analisar outro documento</button>
           </div>
         } @else if (errorMessage(); as err) {
           <div class="result-box result-error" role="alert">
@@ -92,45 +272,17 @@
           </div>
         }
 
-        @if (!result() && !errorMessage()) {
-          <img
-            src="/assets/images/macote-search.svg"
-            alt=""
-            class="mascote"
-            width="280"
-            height="280"
-            aria-hidden="true"
-          />
+        @if (!unifiedReport() && !errorMessage()) {
+          <img src="/assets/images/macote-search.svg" alt="" class="mascote" width="280" height="280" aria-hidden="true" />
           <div class="upload-row">
-            <button
-              type="button"
-              class="btn-add"
-              (click)="openFileDialog()"
-              aria-label="Selecionar arquivo PDF"
-            >
+            <button type="button" class="btn-add" (click)="openFileDialog()" aria-label="Selecionar arquivo PDF">
               <span class="icon-plus" aria-hidden="true">+</span>
             </button>
-            <input
-              #fileInput
-              type="file"
-              accept=".pdf,application/pdf"
-              class="input-file-hidden"
-              (change)="onFileChange($event)"
-              aria-label="Arquivo PDF"
-            />
-            <input
-              type="text"
-              class="input-display"
-              [value]="selectedFileName()"
-              readonly
-              placeholder="Selecione um PDF de matrícula"
-              (click)="openFileDialog()"
-            />
+            <input #fileInput type="file" accept=".pdf,application/pdf" class="input-file-hidden" (change)="onFileChange($event)" aria-label="Arquivo PDF" />
+            <input type="text" class="input-display" [value]="selectedFileName()" readonly placeholder="Selecione um PDF de matrícula" (click)="openFileDialog()" />
           </div>
           @if (selectedFile()) {
-            <button type="button" class="btn-analisar" (click)="startAnalysis()">
-              Analisar matrícula
-            </button>
+            <button type="button" class="btn-analisar" (click)="startAnalysis()">Analisar documento</button>
           }
         }
       </div>

@@ -31,9 +31,9 @@
             @for (p of profiles(); track p.id) {
               <tr>
                 <td>{{ p.email ?? '—' }}</td>
-                <td>{{ p.first_name ?? '—' }}</td>
-                <td>{{ p.last_name ?? '—' }}</td>
-                <td>{{ p.date_of_birth ?? '—' }}</td>
+                <td>{{ p.firstName ?? '—' }}</td>
+                <td>{{ p.lastName ?? '—' }}</td>
+                <td>{{ p.dateOfBirth ?? '—' }}</td>
                 <td>{{ p.gender === 'M' ? 'M' : p.gender === 'F' ? 'F' : '—' }}</td>
                 <td>{{ p.plan ?? '—' }}</td>
                 <td>{{ p.role === 'admin' ? 'Admin' : p.role === 'user' ? 'Usuário' : '—' }}</td>

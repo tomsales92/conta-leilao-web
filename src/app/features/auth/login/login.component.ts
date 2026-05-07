@@ -6,7 +6,6 @@ import {
   AUTH_STORAGE_KEYS,
   LOGIN_ERROR_MESSAGES,
   INVALID_CREDENTIALS_PATTERNS,
-  SUPABASE_ERROR_CODE_INVALID_CREDENTIALS,
 } from '../constants/auth.constants';
 
 @Component({
@@ -47,7 +46,6 @@ export class LoginComponent implements OnInit {
     this.cdr.detectChanges();
     try {
       await this.auth.signInWithGoogle();
-      // Redirecionamento feito pelo AuthService; ao voltar do Google a sessão é restaurada
     } catch (e: unknown) {
       this.error = this.getLoginErrorMessage(e);
       this.cdr.detectChanges();
@@ -111,38 +109,26 @@ export class LoginComponent implements OnInit {
 
   private getLoginErrorMessage(e: unknown): string {
     const msg = this.getErrorMessage(e);
-    if (this.isProviderNotEnabledError(e) || /provider is not enabled|provider not enabled/i.test(msg)) {
+    if (/provider.*not enabled|provider not enabled|google.*unavailable/i.test(msg)) {
       return LOGIN_ERROR_MESSAGES.providerNotEnabled;
     }
-    const isInvalidCredentials =
-      this.isInvalidCredentialsError(e) ||
-      INVALID_CREDENTIALS_PATTERNS.some((p) => msg.toLowerCase().includes(p));
+    const isInvalidCredentials = INVALID_CREDENTIALS_PATTERNS.some((p) =>
+      msg.toLowerCase().includes(p)
+    );
     return isInvalidCredentials
       ? LOGIN_ERROR_MESSAGES.invalidCredentials
-      : (msg || LOGIN_ERROR_MESSAGES.generic);
-  }
-
-  private isProviderNotEnabledError(e: unknown): boolean {
-    if (!e || typeof e !== 'object') return false;
-    const o = e as { error_code?: string; msg?: string; message?: string };
-    const text = o.msg ?? o.message ?? '';
-    if (o.error_code === 'validation_failed' && /provider.*not enabled|unsupported provider/i.test(text)) {
-      return true;
-    }
-    if (e instanceof Error && /provider.*not enabled|unsupported provider/i.test(e.message)) return true;
-    return false;
+      : msg || LOGIN_ERROR_MESSAGES.generic;
   }
 
   private getErrorMessage(e: unknown): string {
     if (e instanceof Error) {
-      const m = e.message;
       try {
-        const parsed = JSON.parse(m) as { msg?: string };
+        const parsed = JSON.parse(e.message) as { msg?: string };
         if (typeof parsed?.msg === 'string') return parsed.msg;
       } catch {
         // not JSON
       }
-      return m;
+      return e.message;
     }
     if (e && typeof e === 'object') {
       const o = e as { message?: string; msg?: string };
@@ -150,10 +136,5 @@ export class LoginComponent implements OnInit {
       if (typeof o.message === 'string') return o.message;
     }
     return '';
-  }
-
-  private isInvalidCredentialsError(e: unknown): boolean {
-    if (!e || typeof e !== 'object' || !('code' in e)) return false;
-    return (e as { code: string }).code === SUPABASE_ERROR_CODE_INVALID_CREDENTIALS;
   }
 }

@@ -20,6 +20,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'consultar-iptu',
+    loadComponent: () => import('./features/consultar-iptu/consultar-iptu.component').then(m => m.ConsultarIptuComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'forma-pagamento',
     loadComponent: () => import('./features/journey/forma-pagamento/forma-pagamento.component').then(m => m.FormaPagamentoComponent),
     canActivate: [authGuard, journeyGuard],

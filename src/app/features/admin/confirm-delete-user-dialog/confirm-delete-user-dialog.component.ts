@@ -30,14 +30,14 @@ export class ConfirmDeleteUserDialogComponent {
 
   get hasName(): boolean {
     const p = this.data.profile;
-    return !!(p.first_name?.trim() || p.last_name?.trim());
+    return !!(p.firstName?.trim() || p.lastName?.trim());
   }
 
   get canConfirm(): boolean {
     const p = this.data.profile;
     if (this.hasName) {
-      const firstMatch = this.normalize(this.firstNameConfirm) === this.normalize(p.first_name);
-      const lastMatch = this.normalize(this.lastNameConfirm) === this.normalize(p.last_name);
+      const firstMatch = this.normalize(this.firstNameConfirm) === this.normalize(p.firstName);
+      const lastMatch = this.normalize(this.lastNameConfirm) === this.normalize(p.lastName);
       return firstMatch && lastMatch;
     }
     return this.normalize(this.emailConfirm) === this.normalize(p.email);
@@ -45,7 +45,7 @@ export class ConfirmDeleteUserDialogComponent {
 
   get displayName(): string {
     const p = this.data.profile;
-    if (p.first_name || p.last_name) return [p.first_name, p.last_name].filter(Boolean).join(' ').trim();
+    if (p.firstName || p.lastName) return [p.firstName, p.lastName].filter(Boolean).join(' ').trim();
     return p.email ?? p.id;
   }
 

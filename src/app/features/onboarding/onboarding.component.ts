@@ -49,11 +49,10 @@ export class OnboardingComponent implements OnInit {
     try {
       const p = await this.admin.getProfile(user.id);
       this.profile.set(p);
-      const meta = user.user_metadata ?? {};
       this.form.patchValue({
-        firstName: p?.first_name ?? meta['first_name'] ?? meta['given_name'] ?? '',
-        lastName: p?.last_name ?? meta['last_name'] ?? meta['family_name'] ?? '',
-        dateOfBirth: p?.date_of_birth ?? '',
+        firstName: p?.firstName ?? '',
+        lastName: p?.lastName ?? '',
+        dateOfBirth: p?.dateOfBirth ?? '',
         gender: (p?.gender === 'F' ? 'F' : 'M') as 'M' | 'F',
       });
     } finally {
@@ -64,7 +63,7 @@ export class OnboardingComponent implements OnInit {
   protected get profileIncomplete(): boolean {
     const p = this.profile();
     if (!p) return true;
-    return !p.first_name || !p.last_name || !p.date_of_birth || !p.gender;
+    return !p.firstName || !p.lastName || !p.dateOfBirth || !p.gender;
   }
 
   protected async submitCompleteProfile(): Promise<void> {
@@ -79,11 +78,11 @@ export class OnboardingComponent implements OnInit {
     this.savingProfile.set(true);
     try {
       const v = this.form.getRawValue();
-      await this.admin.upsertProfile(id, {
+      await this.admin.updateProfile(id, {
         email: user?.email ?? this.profile()?.email ?? null,
-        first_name: v.firstName || null,
-        last_name: v.lastName || null,
-        date_of_birth: v.dateOfBirth || null,
+        firstName: v.firstName || null,
+        lastName: v.lastName || null,
+        dateOfBirth: v.dateOfBirth || null,
         gender: v.gender as 'M' | 'F',
         plan: 'free',
         role: 'user',
@@ -107,15 +106,13 @@ export class OnboardingComponent implements OnInit {
 
   protected get firstName(): string {
     const p = this.profile();
-    if (p?.first_name) return p.first_name;
     const user = this.auth.currentUser();
-    const meta = user?.user_metadata;
-    return meta?.['first_name'] ?? meta?.['given_name'] ?? meta?.['name'] ?? '';
+    return p?.firstName ?? user?.firstName ?? '';
   }
 
   protected get welcomeWord(): string {
     const p = this.profile();
-    const gender = p?.gender ?? this.auth.currentUser()?.user_metadata?.['gender'];
+    const gender = p?.gender;
     if (gender === 'M') return 'bem-vindo';
     if (gender === 'F') return 'bem-vinda';
     return 'bem-vindo';
